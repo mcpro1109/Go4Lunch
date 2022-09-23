@@ -6,12 +6,23 @@
     tools:context=".Fragment.RestaurantMapFragment">
 
     <TextView
+        android:id="@+id/textMap"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello map"
         android:gravity="center"
         android:layout_marginTop="250dp"
         android:layout_marginLeft="100dp"
         />
+
+    <Button
+        android:id="@+id/buttonEssaiRestoMap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="essai test viewmodel"
+        android:gravity="center"
+        android:layout_marginTop="300dp"
+        android:layout_marginLeft="100dp">
+
+    </Button>
 
 </FrameLayout>

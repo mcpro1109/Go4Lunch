@@ -7,12 +7,25 @@
 
 
     <TextView
+        android:id="@+id/textList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="liste des restaurants"
         android:layout_marginLeft="150dp"
         android:layout_marginTop="250dp"
-        ></TextView>
+        >
+    </TextView>
+
+
+    <Button
+        android:id="@+id/buttonEssaiRestoList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="essai test viewmodel"
+        android:gravity="center"
+        android:layout_marginTop="300dp"
+        android:layout_marginLeft="100dp">
+
+    </Button>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/restaurantRecyclerView"

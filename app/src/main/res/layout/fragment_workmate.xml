@@ -12,7 +12,7 @@
         android:layout_marginStart="100dp"
         android:layout_marginTop="200dp"
         android:gravity="center"
-        android:text="Hello" />
+         />
 
     <Button
         android:id="@+id/buttonEssai"

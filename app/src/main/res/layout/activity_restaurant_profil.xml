@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RestaurantProfilActivity">
+
+    <ImageView
+        android:id="@+id/imageProfilRestaurant"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:src="@drawable/workersblur"
+        tools:ignore="MissingConstraints">
+    </ImageView>
+
+    <TextView
+        android:id="@+id/nameRestaurant"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="-16dp"
+        tools:layout_editor_absoluteY="250dp"
+        android:background="@color/red"
+        android:text="restaurant"
+        android:textColor="@color/white"
+        tools:ignore="MissingConstraints">
+    </TextView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:src="@drawable/ic_baseline_people_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/nameRestaurant"
+        app:layout_constraintHorizontal_bias="0.954"
+        app:layout_constraintStart_toStartOf="@+id/nameRestaurant"
+        app:layout_constraintTop_toTopOf="@+id/imageProfilRestaurant"
+        app:layout_constraintVertical_bias="0.343">
+
+    </com.google.android.material.floatingactionbutton.FloatingActionButton>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="293dp"
+        android:layout_height="54dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nameRestaurant"
+        app:layout_constraintVertical_bias="0.053">
+
+        <Button
+            android:id="@+id/phone_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:drawableTop="@drawable/ic_baseline_phone_24"
+            android:text="CALL"
+            android:textColor="@color/red"
+            tools:layout_editor_absoluteX="2dp"
+            tools:layout_editor_absoluteY="269dp" />
+
+        <Button
+            android:id="@+id/like_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:drawableTop="@drawable/ic_baseline_star_24"
+            android:text="LIKE"
+            android:textColor="@color/red"
+            tools:layout_editor_absoluteX="2dp"
+            tools:layout_editor_absoluteY="269dp" />
+
+        <Button
+            android:id="@+id/web_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:drawableTop="@drawable/ic_baseline_public_24"
+            android:text="WEBSITE"
+            android:textColor="@color/red"
+            tools:layout_editor_absoluteX="2dp"
+            tools:layout_editor_absoluteY="269dp" />
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layout_constraintVertical_bias="0.197"
+        tools:layout_editor_absoluteX="0dp">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

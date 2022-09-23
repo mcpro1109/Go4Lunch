@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/workers"
+    android:background="@drawable/workersblur"
     tools:context=".ConnexionActivity">
 
     <ImageView
@@ -25,8 +25,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Go4Lunch"
-        android:textSize="46dp"
         android:textColor="@color/white"
+        android:textSize="46dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,8 +38,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:textColor="@color/white"
         android:text="Find a nice restaurant and invite your co-workers for lunch!"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/loginButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.489"
@@ -49,19 +49,17 @@
 
     </TextView>
 
-    <Button
-    android:id="@+id/loginButton"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="connexion"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.498"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintVertical_bias="0.6"
-    >
 
-</Button>
+    <ImageView
+        android:id="@+id/loginButton"
+        android:layout_width="317dp"
+        android:layout_height="70dp"
+        android:src="@drawable/googlesign"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </ImageView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
