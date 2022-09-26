@@ -4,49 +4,43 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeActivity">
+    tools:context=".HomeActivity"
+    >
 
-    <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".HomeActivity">
-    </RelativeLayout>
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/red"
+            android:elevation="4dp"
+            android:theme="@style/ThemeOverlay.AppCompat.DayNight.ActionBar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:popupTheme="@style/Theme.AppCompat.Light"
+            app:title="I'm Hungry!"
+            app:titleTextColor="@color/white"
+            >
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/red"
-        android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.DayNight.ActionBar"
-        app:popupTheme="@style/Theme.AppCompat.Light"
-        app:title="I'm Hungry!"
-        app:titleTextColor="@color/white"
-        app:layout_constraintTop_toTopOf="parent"
-        >
+        </androidx.appcompat.widget.Toolbar>
 
-    </androidx.appcompat.widget.Toolbar>
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fragmentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/bottonNavigationView"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragmentContainer"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/bottonNavigationView"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        >
+        </androidx.fragment.app.FragmentContainerView>
 
-    </androidx.fragment.app.FragmentContainerView>
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottonNavigationView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:menu="@menu/bottom_nav_menu"
-        android:background="@color/white">
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottonNavigationView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:menu="@menu/bottom_nav_menu">
 
-    </com.google.android.material.bottomnavigation.BottomNavigationView>
+        </com.google.android.material.bottomnavigation.BottomNavigationView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
