@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="100dp"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="400dp"
         android:gravity="center"
          />
 
@@ -18,11 +18,19 @@
         android:id="@+id/buttonEssai"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="essai"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="500dp"
         android:gravity="center"
-        android:layout_marginTop="300dp"
-        android:layout_marginLeft="100dp">
+        android:text="essai">
 
     </Button>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewWorkmate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:listitem="@layout/workmate_list_item">
+
+    </androidx.recyclerview.widget.RecyclerView>
 
 </FrameLayout>

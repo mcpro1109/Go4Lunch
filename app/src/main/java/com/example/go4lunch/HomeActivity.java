@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,7 +24,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -38,13 +41,16 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
     private FirebaseAuth firebaseAuth;
     GoogleSignInClient googleSignInClient;
     GoogleSignInOptions googleSignInOptions;
+
     private FirebaseAuth.AuthStateListener authStateListener;
-    List<AuthUI.IdpConfig> providers = Collections.singletonList(new AuthUI.IdpConfig.GoogleBuilder().build());
+    List<AuthUI.IdpConfig> providers = Arrays.asList(
+            new AuthUI.IdpConfig.GoogleBuilder().build(),
+            new AuthUI.IdpConfig.FacebookBuilder().build());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.menuessai);
+        setContentView(R.layout.activity_home);
 
         toolbar = findViewById(R.id.toolbarmenu);
         setSupportActionBar(toolbar);
@@ -58,11 +64,18 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         configureDrawerLayout();
         configureNavigationView();
 
-        firebaseAuth = FirebaseAuth.getInstance();
-        createRequest();
-     /*   firebaseAuth = FirebaseAuth.getInstance();
-        authStateListener = new FirebaseAuth.AuthStateListener() {
+        //connexion
+        logUser();
 
+        firebaseAuth.addAuthStateListener(authStateListener);
+        firebaseAuth.removeAuthStateListener(authStateListener);
+
+    }
+
+    private void logUser() {
+        firebaseAuth = FirebaseAuth.getInstance();
+        authStateListener = new FirebaseAuth.AuthStateListener() {
+            @SuppressLint("ResourceType")
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -70,7 +83,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
                     // if the user is already authenticated then we will
                     // redirect our user to next screen which is our home screen.
                     // we are redirecting to new screen via an intent.
-                    Intent i = new Intent(HomeActivity.this, ConnexionActivity.class);
+                    Intent i = new Intent(HomeActivity.this, HomeActivity.class);
                     startActivity(i);
                     finish();
                 } else {
@@ -79,14 +92,13 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
                                     .createSignInIntentBuilder()
                                     .setTheme(R.style.Theme_Go4Lunch)
                                     .setAvailableProviders(providers)
-                                    .setIsSmartLockEnabled(false, true)
-                                    .setLogo(com.firebase.ui.auth.R.drawable.common_google_signin_btn_icon_light_normal)
+                                    .setIsSmartLockEnabled(false,true)
+                                    .setLogo(R.drawable.logo_food)
                                     .build(),
                             RC_SIGN_IN);
                 }
             }
-        };*/
-
+        };
     }
 
     private void configureNavigationView() {
@@ -110,12 +122,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         toggle.syncState();
     }
 
-    private void createRequest() {
-        googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-        googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
-    }
+
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -124,19 +131,16 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
             case R.id.mapView:
                 RestaurantMapFragment restaurantMapFragment = RestaurantMapFragment.newInstance();
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, restaurantMapFragment).commit();
-                // getSupportFragmentManager().beginTransaction().replace(R.id.containerfragment, restaurantMapFragment).commit();
                 return true;
 
             case R.id.listView:
                 RestaurantListFragment restaurantListFragment = RestaurantListFragment.newInstance();
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, restaurantListFragment).commit();
-                // getSupportFragmentManager().beginTransaction().replace(R.id.containerfragment, restaurantListFragment).commit();
                 return true;
 
             case R.id.workmates:
                 WorkmateFragment workmateFragment = WorkmateFragment.newInstance();
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, workmateFragment).commit();
-                // getSupportFragmentManager().beginTransaction().replace(R.id.containerfragment, workmateFragment).commit();
                 return true;
 
             //navigation in the navigationView
@@ -155,7 +159,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
 
     private void logout() {
         FirebaseAuth.getInstance().signOut();
-        Intent intent = new Intent(HomeActivity.this, ConnexionActivity.class);
+        Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
         Toast.makeText(this, "logout", Toast.LENGTH_SHORT).show();
         startActivity(intent);
         finish();
@@ -165,4 +169,6 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
     public void onPointerCaptureChanged(boolean hasCapture) {
         super.onPointerCaptureChanged(hasCapture);
     }
+
+
 }
