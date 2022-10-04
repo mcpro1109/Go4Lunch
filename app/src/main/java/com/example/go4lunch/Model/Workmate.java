@@ -2,24 +2,29 @@ package com.example.go4lunch.Model;
 
 import android.media.Image;
 
+import androidx.annotation.NonNull;
+
+import java.util.Map;
+
 public class Workmate {
-    private int id;
+
+    private String id;
     private String name;
     private String firstName;
-    private Image avatar;
+    private String avatarUrl;
 
-    public Workmate(int id, String name, String firstName, Image avatar) {
+    public Workmate(String id, String name, String firstName, String avatarUrl) {
         this.id = id;
         this.name = name;
         this.firstName = firstName;
-        this.avatar = avatar;
+        this.avatarUrl = avatarUrl;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -39,11 +44,30 @@ public class Workmate {
         this.firstName = firstName;
     }
 
-    public Image getAvatar() {
-        return avatar;
+    public String getAvatar() {
+        return avatarUrl;
     }
 
     public void setAvatar(Image avatar) {
-        this.avatar = avatar;
+        this.avatarUrl = avatarUrl;
+    }
+
+    @NonNull
+    public static Workmate[] getAllWorkmates(){
+        return new Workmate[]{
+                new Workmate("1", "Dupond", "Alain", "url"),
+                new Workmate("2", "Durand", "Elise", "url"),
+                new Workmate("3", "Martin", "Paul", "url"),
+
+        };
+    }
+
+    public Object[] workmates(){
+        return new Workmate[]{
+                new Workmate("1", "Dupond", "Alain", "url"),
+                new Workmate("2", "Durand", "Elise", "url"),
+                new Workmate("3", "Martin", "Paul", "url"),
+
+        };
     }
 }

@@ -11,7 +11,7 @@ public class Restaurant {
     public String name;
     public int distance;
     @Nullable
-    public Image image;
+    public String imageURL;
     @Nullable
     public String type;
     public String adresse;
@@ -19,17 +19,16 @@ public class Restaurant {
     public Time hours;
     public int opinion;
 
-    public Restaurant(String name, int distance, @Nullable Image image, @Nullable String type, String adresse, String people, Time hours, int opinion) {
+    public Restaurant(String name, int distance, @Nullable String imageURL, @Nullable String type, String adresse, String people, Time hours, int opinion) {
         this.name = name;
         this.distance = distance;
-        this.image = image;
+        this.imageURL = imageURL;
         this.type = type;
         this.adresse = adresse;
         this.people = people;
         this.hours = hours;
         this.opinion = opinion;
     }
-
 
 
     public String getName() {
@@ -49,12 +48,12 @@ public class Restaurant {
     }
 
     @Nullable
-    public Image getImage() {
-        return image;
+    public String getImageURL() {
+        return imageURL;
     }
 
-    public void setImage(@Nullable Image image) {
-        this.image = image;
+    public void setImage(@Nullable String imageURL) {
+        this.imageURL = imageURL;
     }
 
     @Nullable

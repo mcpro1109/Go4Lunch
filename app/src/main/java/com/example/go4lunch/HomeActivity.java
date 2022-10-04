@@ -22,6 +22,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -30,22 +31,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class HomeActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, NavigationView.OnNavigationItemSelectedListener {
+public class HomeActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener, NavigationView.OnNavigationItemSelectedListener {
 
     private Toolbar toolbar;
     private BottomNavigationView bottomNavigationView;
     private DrawerLayout menuLeft;
     private NavigationView navigationView;
-
-    private static final int RC_SIGN_IN = 123;
-    private FirebaseAuth firebaseAuth;
-    GoogleSignInClient googleSignInClient;
-    GoogleSignInOptions googleSignInOptions;
-
-    private FirebaseAuth.AuthStateListener authStateListener;
-    List<AuthUI.IdpConfig> providers = Arrays.asList(
-            new AuthUI.IdpConfig.GoogleBuilder().build(),
-            new AuthUI.IdpConfig.FacebookBuilder().build());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,63 +44,26 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         setContentView(R.layout.activity_home);
 
         toolbar = findViewById(R.id.toolbarmenu);
-        setSupportActionBar(toolbar);
-        bottomNavigationView = findViewById(R.id.bottonNavigationView);
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
         menuLeft = findViewById(R.id.drawerLayout);
         navigationView = findViewById(R.id.navigationView);
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(this);
-        bottomNavigationView.setSelectedItemId(R.id.mapView);
+        setSupportActionBar(toolbar);
 
         configureDrawerLayout();
         configureNavigationView();
-
-        //connexion
-        logUser();
-
-        firebaseAuth.addAuthStateListener(authStateListener);
-        firebaseAuth.removeAuthStateListener(authStateListener);
-
-    }
-
-    private void logUser() {
-        firebaseAuth = FirebaseAuth.getInstance();
-        authStateListener = new FirebaseAuth.AuthStateListener() {
-            @SuppressLint("ResourceType")
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // if the user is already authenticated then we will
-                    // redirect our user to next screen which is our home screen.
-                    // we are redirecting to new screen via an intent.
-                    Intent i = new Intent(HomeActivity.this, HomeActivity.class);
-                    startActivity(i);
-                    finish();
-                } else {
-                    startActivityForResult(
-                            AuthUI.getInstance()
-                                    .createSignInIntentBuilder()
-                                    .setTheme(R.style.Theme_Go4Lunch)
-                                    .setAvailableProviders(providers)
-                                    .setIsSmartLockEnabled(false,true)
-                                    .setLogo(R.drawable.logo_food)
-                                    .build(),
-                            RC_SIGN_IN);
-                }
-            }
-        };
     }
 
     private void configureNavigationView() {
+        bottomNavigationView.setOnItemSelectedListener(this);
+        bottomNavigationView.setSelectedItemId(R.id.mapView);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    //a voir
-    public void OnBackPressed() {
-        //handle back click to close menu
-        if (this.menuLeft.isDrawerOpen(GravityCompat.START)) {
-            this.menuLeft.closeDrawer(GravityCompat.START);
+    @Override
+    public void onBackPressed() {
+        if (menuLeft.isDrawerOpen(GravityCompat.START)) {
+            menuLeft.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
@@ -121,8 +75,6 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         menuLeft.addDrawerListener(toggle);
         toggle.syncState();
     }
-
-
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -159,7 +111,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
 
     private void logout() {
         FirebaseAuth.getInstance().signOut();
-        Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+        Intent intent = new Intent(this, SplashActivity.class);
         Toast.makeText(this, "logout", Toast.LENGTH_SHORT).show();
         startActivity(intent);
         finish();
@@ -169,6 +121,5 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
     public void onPointerCaptureChanged(boolean hasCapture) {
         super.onPointerCaptureChanged(hasCapture);
     }
-
 
 }

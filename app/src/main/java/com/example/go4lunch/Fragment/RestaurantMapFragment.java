@@ -17,12 +17,12 @@ import android.widget.TextView;
 
 import com.example.go4lunch.R;
 import com.example.go4lunch.Viewmodel.RestaurantMapViewModel;
-import com.example.go4lunch.Viewmodel.RestaurantViewModel;
+import com.example.go4lunch.Viewmodel.HomeFragmentsViewModel;
 
-public class RestaurantMapFragment extends Fragment implements View.OnClickListener {
+public class RestaurantMapFragment extends Fragment {
 
     private RestaurantMapViewModel restaurantMapViewModel;
-    RestaurantViewModel restaurantViewModel;
+    HomeFragmentsViewModel homeFragmentsViewModel;
     Button button;
     TextView textView;
 
@@ -31,37 +31,34 @@ public class RestaurantMapFragment extends Fragment implements View.OnClickListe
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View result = inflater.inflate(R.layout.fragment_restaurant_map, container, false);
-        this.textView = result.findViewById(R.id.textMap);
-        result.findViewById(R.id.buttonEssaiRestoMap).setOnClickListener(this);
+
+        textView = result.findViewById(R.id.textMap);
+        button = result.findViewById(R.id.buttonEssaiRestoMap);
+
         return result;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //restaurantMapViewModel = new ViewModelProvider(this).get(RestaurantMapViewModel.class);
-        restaurantViewModel = new ViewModelProvider(getActivity()).get(RestaurantViewModel.class);
+        restaurantMapViewModel = new ViewModelProvider(this).get(RestaurantMapViewModel.class);
+        homeFragmentsViewModel = new ViewModelProvider(getActivity()).get(HomeFragmentsViewModel.class);
+
+        configureButton();
         observeView();
     }
 
     private void observeView() {
-      /*  restaurantViewModel.getTextLiveData().observe(getViewLifecycleOwner(), text -> {
-            textView.setText(text);
-        });*/
-
-        restaurantViewModel.getTextLiveData().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-                textView.setText(s);
-            }
-        });
+        homeFragmentsViewModel.getTextLiveData().observe(getViewLifecycleOwner(), text ->
+                textView.setText(text)
+        );
     }
 
-    @Override
-    public void onClick(View view) {
-        restaurantViewModel.updateTextRestaurant();
+    private void configureButton() {
+        button.setOnClickListener(view ->
+                homeFragmentsViewModel.updateTextRestaurant()
+        );
     }
 }

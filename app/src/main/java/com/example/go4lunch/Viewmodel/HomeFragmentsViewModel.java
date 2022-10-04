@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel;
 
 import java.util.UUID;
 
-public class RestaurantViewModel extends ViewModel {
+public class HomeFragmentsViewModel extends ViewModel {
 
     private MutableLiveData<String> textLiveDataRestaurant = new MutableLiveData<>("text d'essai");
 
