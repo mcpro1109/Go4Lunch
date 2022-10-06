@@ -16,20 +16,19 @@ public class Restaurant {
     public String type;
     public String adresse;
     public String people;
-    public Time hours;
     public int opinion;
 
-    public Restaurant(String name, int distance, @Nullable String imageURL, @Nullable String type, String adresse, String people, Time hours, int opinion) {
+    public Restaurant(String name, int distance, @Nullable String imageURL, @Nullable String type, String adresse, String people, int opinion) {
         this.name = name;
         this.distance = distance;
         this.imageURL = imageURL;
         this.type = type;
         this.adresse = adresse;
         this.people = people;
-        this.hours = hours;
         this.opinion = opinion;
     }
 
+    public Restaurant(){}
 
     public String getName() {
         return name;
@@ -79,14 +78,6 @@ public class Restaurant {
 
     public void setPeople(String people) {
         this.people = people;
-    }
-
-    public Time getHours() {
-        return hours;
-    }
-
-    public void setHours(Time hours) {
-        this.hours = hours;
     }
 
     public int getOpinion() {

@@ -10,8 +10,10 @@
 
     <ImageView
         android:id="@+id/avatarWorkmate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="16dp"
+        android:layout_marginRight="24dp"
         android:src="@drawable/ic_baseline_circle_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/textSituationWorkmate"
@@ -31,5 +33,6 @@
         app:layout_constraintTop_toTopOf="parent">
 
     </TextView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

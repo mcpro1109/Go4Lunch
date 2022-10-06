@@ -1,7 +1,6 @@
-package com.example.go4lunch;
+package com.example.go4lunch.adapter;
 
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,39 +10,48 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunch.Model.Workmate;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.example.go4lunch.R;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class WorkmateFragmentRecyclerViewAdapter extends RecyclerView.Adapter<WorkmateFragmentRecyclerViewAdapter.ViewHolder> {
 
-    private List<Workmate> workmates;
-    private FirebaseFirestore firebaseFirestore;
+    private ArrayList<Workmate> workmatesList;
 
-    public WorkmateFragmentRecyclerViewAdapter(List<Workmate> workmates) {
-        this.workmates = workmates;
+    public WorkmateFragmentRecyclerViewAdapter(ArrayList<Workmate> workmatesList) {
+        this.workmatesList = workmatesList;
     }
 
+    public void update(ArrayList<Workmate> workmatesList) {
+        this.workmatesList = workmatesList;
+        notifyDataSetChanged();
+    }
 
     @NonNull
     @Override
     public WorkmateFragmentRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.workmate_list_item, parent, false);
-
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull WorkmateFragmentRecyclerViewAdapter.ViewHolder holder, int position) {
-        Workmate workmate= workmates.get(position);
-        holder.textWorkmate.setText(workmate.getName());
-        Log.d("nom", workmate.getName() );
+        Workmate workmate = workmatesList.get(position);
+
+        holder.textWorkmate.setText(workmate.getFirstName() + " va manger au restaurant italien");
+
+        Glide.with(holder.avatarWorkmate.getContext())
+                .load("https://ui-avatars.com/api/?name=" + workmate.getFirstName() + "&background=random")
+                .apply(RequestOptions.circleCropTransform())
+                .into(holder.avatarWorkmate);
     }
 
     @Override
     public int getItemCount() {
-        return workmates.size();
+        return workmatesList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

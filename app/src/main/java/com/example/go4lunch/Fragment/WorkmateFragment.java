@@ -3,7 +3,6 @@ package com.example.go4lunch.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,78 +12,70 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.example.go4lunch.Model.Workmate;
 import com.example.go4lunch.R;
 import com.example.go4lunch.Viewmodel.WorkmateViewModel;
-import com.example.go4lunch.WorkmateFragmentRecyclerViewAdapter;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.example.go4lunch.adapter.WorkmateFragmentRecyclerViewAdapter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class WorkmateFragment extends Fragment implements View.OnClickListener {
 
     private WorkmateViewModel workmateViewModel;
-    TextView textView;
-    Button buttonEssai;
-    RecyclerView recyclerView;
-    List<Workmate> workmates = new ArrayList<>();
-    WorkmateFragmentRecyclerViewAdapter workmateFragmentRecyclerViewAdapter = new WorkmateFragmentRecyclerViewAdapter(workmates);
-    FirebaseFirestore firebaseFirestore;
 
+    RecyclerView recyclerView;
+    ArrayList<Workmate> workmates = new ArrayList<>();
+    WorkmateFragmentRecyclerViewAdapter adapter = new WorkmateFragmentRecyclerViewAdapter(workmates);
 
     public static WorkmateFragment newInstance() {
         return new WorkmateFragment();
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        View result = inflater.inflate(R.layout.fragment_workmate, container, false);
+    public View onCreateView(
+            @NonNull LayoutInflater inflater,
+            @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState
+    ) {
+        View view = inflater.inflate(R.layout.fragment_workmate, container, false);
 
-        this.textView = result.findViewById(R.id.textEssai);
-        recyclerView = result.findViewById(R.id.recyclerViewWorkmate);
-        result.findViewById(R.id.buttonEssai).setOnClickListener(this);
+        recyclerView = view.findViewById(R.id.recyclerViewWorkmate);
 
-        Context context = result.getContext();
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
-        recyclerView.setAdapter(workmateFragmentRecyclerViewAdapter);
+        setupRecyclerView();
 
-        firebaseFirestore = FirebaseFirestore.getInstance();
-
-        return result;
+        return view;
     }
 
+    private void setupRecyclerView() {
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
+        recyclerView.setAdapter(adapter);
+    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         workmateViewModel = new ViewModelProvider(this).get(WorkmateViewModel.class);
+
         observeText();
-        // firebaseFirestore = FirebaseFirestore.getInstance();
-        workmateViewModel.addDataToFirestore();
-        workmateViewModel.updateWorkmates();
+
+        workmateViewModel.loadWorkmates();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void observeText() {
-        workmateViewModel.getTextLiveData().observe(getViewLifecycleOwner(), text -> {
-            textView.setText(text);
+
+        workmateViewModel.getWorkmatesData().observe(getViewLifecycleOwner(), workmates -> {
+            adapter.update(workmates);
         });
     }
 
     @Override
     public void onClick(View view) {
-        workmateViewModel.updateText();
-
 
     }
 }
