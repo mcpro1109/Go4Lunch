@@ -1,7 +1,6 @@
 package com.example.go4lunch.adapter;
 
 import android.graphics.Typeface;
-import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.StyleSpan;
@@ -25,7 +24,7 @@ public class RestaurantListFragmentRecyclerViewAdapter extends RecyclerView.Adap
 
     private ArrayList<Restaurant> restaurantArrayList;
 
-    public RestaurantListFragmentRecyclerViewAdapter(ArrayList<Restaurant> restaurantArrayList) {
+    public RestaurantListFragmentRecyclerViewAdapter(ArrayList<Restaurant> restaurantArrayList, RecyclerViewClickListener recyclerViewClickListener) {
         this.restaurantArrayList = restaurantArrayList;
     }
 
@@ -63,6 +62,10 @@ public class RestaurantListFragmentRecyclerViewAdapter extends RecyclerView.Adap
     @Override
     public int getItemCount() {
         return restaurantArrayList.size();
+    }
+
+    public interface RecyclerViewClickListener {
+        void onClick(View v, int position);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

@@ -1,6 +1,5 @@
 package com.example.go4lunch.Fragment;
 
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.annotation.SuppressLint;
@@ -16,15 +15,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.example.go4lunch.Model.Restaurant;
 import com.example.go4lunch.R;
+import com.example.go4lunch.RestaurantProfilActivity;
 import com.example.go4lunch.Viewmodel.RestaurantListViewModel;
 import com.example.go4lunch.Viewmodel.HomeFragmentsViewModel;
 import com.example.go4lunch.adapter.RestaurantListFragmentRecyclerViewAdapter;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class RestaurantListFragment extends Fragment {
@@ -34,7 +33,9 @@ public class RestaurantListFragment extends Fragment {
     HomeFragmentsViewModel homeFragmentsViewModel;
 
     ArrayList<Restaurant> restaurants=new ArrayList<>();
-    RestaurantListFragmentRecyclerViewAdapter adapter=new RestaurantListFragmentRecyclerViewAdapter(restaurants);
+
+    RestaurantListFragmentRecyclerViewAdapter adapter=new RestaurantListFragmentRecyclerViewAdapter(restaurants,
+            (v, position) -> RestaurantProfilActivity.navigate(getActivity(), restaurants.get(position)));
 
     public static RestaurantListFragment newInstance() {
         return new RestaurantListFragment();
@@ -62,19 +63,31 @@ public class RestaurantListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         homeFragmentsViewModel = new ViewModelProvider(getActivity()).get(HomeFragmentsViewModel.class);
 
-        configureButton();
+
         observeText();
-        homeFragmentsViewModel.loadRestaurantsList();
+       // homeFragmentsViewModel.loadRestaurantsList();
+
+            homeFragmentsViewModel.start();
+
+       /* recyclerView.setAdapter(new RestaurantListFragmentRecyclerViewAdapter(
+                restaurants, new RestaurantListFragmentRecyclerViewAdapter.RecyclerViewClickListener() {
+            @Override
+            public void onClick(View v, int position) {
+
+                RestaurantProfilActivity.navigate(getActivity(),restaurants.get(position));
+
+            }
+
+        }));*/
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private void observeText() {
                homeFragmentsViewModel.getRestaurantData().observe(getViewLifecycleOwner(), restaurants ->{
             adapter.update(restaurants);
-        });
-    }
 
-    private void configureButton() {
+    });
 
     }
+
 }
