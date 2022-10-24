@@ -5,27 +5,64 @@ import android.media.Image;
 
 import androidx.annotation.Nullable;
 
+import com.example.go4lunch.api.responses.OpeningHours;
+import com.example.go4lunch.api.responses.Photo;
+import com.example.go4lunch.api.responses.RestaurantResponse;
+
+import java.io.Serializable;
 import java.sql.Time;
+import java.util.ArrayList;
 
-public class Restaurant {
-    public String name;
-    public int distance;
+public class Restaurant implements Serializable {
+    private String name;
+    private int distance;
     @Nullable
-    public String imageURL;
+    private String imageURL;
     @Nullable
-    public String type;
-    public String adresse;
-    public String people;
-    public int opinion;
+    private String type;
+    private String address;
+    private int people;
+    private Boolean hoursOpen;
+    private double opinion;
+    private String phoneNumber;
+    private String website;
 
-    public Restaurant(String name, int distance, @Nullable String imageURL, @Nullable String type, String adresse, String people, int opinion) {
+
+    public Restaurant(String name, int distance,
+                      @Nullable String imageURL, @Nullable String type,
+                      String address, Boolean hoursOpen,
+                      int people, double opinion,
+                      String phoneNumber, String website) {
         this.name = name;
         this.distance = distance;
         this.imageURL = imageURL;
         this.type = type;
-        this.adresse = adresse;
+        this.address = address;
+        this.hoursOpen=hoursOpen;
         this.people = people;
         this.opinion = opinion;
+        this.phoneNumber=phoneNumber;
+        this.website=website;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setImageURL(@Nullable String imageURL) {
+        this.imageURL = imageURL;
+    }
+
+    public Boolean getHoursOpen() {
+        return hoursOpen;
+    }
+
+    public void setHoursOpen(Boolean hoursOpen) {
+        this.hoursOpen = hoursOpen;
     }
 
     public Restaurant(){}
@@ -64,27 +101,37 @@ public class Restaurant {
         this.type = type;
     }
 
-    public String getAdresse() {
-        return adresse;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAdresse(String adresse) {
-        this.adresse = adresse;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public String getPeople() {
+    public int getPeople() {
         return people;
     }
 
-    public void setPeople(String people) {
+    public void setPeople(int people) {
         this.people = people;
     }
 
-    public int getOpinion() {
+    public double getOpinion() {
         return opinion;
     }
 
-    public void setOpinion(int opinion) {
+    public void setOpinion(double opinion) {
         this.opinion = opinion;
+    }
+
+    private ArrayList<RestaurantResponse> restaurantResponseArrayList;
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
     }
 }

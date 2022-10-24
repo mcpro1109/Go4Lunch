@@ -70,15 +70,4 @@ public class SplashActivity extends AppCompatActivity implements FirebaseAuth.Au
         FirebaseAuth.getInstance().removeAuthStateListener(this);
     }
 
-    //add workmate signin in firestore
- /*   private void handleResponseAfterSignIn(int requestCode, int resultCode, Intent data){
-        if (requestCode==RC_SIGN_IN){
-            //Success
-            if (resultCode==RESULT_OK){
-                workmateManager.createWorkmate();
-            }
-        }
-    }*/
-
-
 }

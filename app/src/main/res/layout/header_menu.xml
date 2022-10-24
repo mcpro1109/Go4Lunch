@@ -1,25 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:orientation="vertical"
     android:background="@color/red">
 
+    <TextView
+        android:id="@+id/textTitleMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Go4Lunch"
+        android:textColor="@color/white"
+        android:textSize="32dp"
+        android:textStyle="bold"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.281"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </TextView>
 
     <ImageView
-        android:id="@+id/logoHeaderMenu"
+        android:id="@+id/avatarMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="24dp"
         android:src="@drawable/ic_baseline_fastfood_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.085"
+        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toBottomOf="@+id/textTitleMenu"
+        app:layout_constraintVertical_bias="1.0">
 
     </ImageView>
+
+    <TextView
+        android:id="@+id/namePseudoMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="name"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.219"
+        app:layout_constraintStart_toEndOf="@+id/avatarMenu"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.737">
+
+    </TextView>
+
+
+    <TextView
+        android:id="@+id/mailPseudoMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="mail"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.37"
+        app:layout_constraintStart_toEndOf="@+id/namePseudoMenu"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.729">
+
+    </TextView>
 </androidx.constraintlayout.widget.ConstraintLayout>

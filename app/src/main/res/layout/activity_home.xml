@@ -57,7 +57,7 @@
             android:fitsSystemWindows="true"
             app:headerLayout="@layout/header_menu"
             app:menu="@menu/navigation_menu"
-            android:paddingTop="50dp"
+            android:paddingTop="60dp"
             >
 
         </com.google.android.material.navigation.NavigationView>

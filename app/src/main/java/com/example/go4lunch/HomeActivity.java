@@ -7,29 +7,26 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunch.Fragment.RestaurantListFragment;
 import com.example.go4lunch.Fragment.RestaurantMapFragment;
 import com.example.go4lunch.Fragment.WorkmateFragment;
-import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.example.go4lunch.Repository.WorkmateRepository;
+import com.example.go4lunch.Viewmodel.WorkmateViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public class HomeActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener, NavigationView.OnNavigationItemSelectedListener {
 
@@ -37,6 +34,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationBarView
     private BottomNavigationView bottomNavigationView;
     private DrawerLayout menuLeft;
     private NavigationView navigationView;
+    private ImageView avatarLoginMenu;
+    private TextView nameWorkmateLog;
+    private TextView mailWorkmateLog;
+    private WorkmateViewModel workmateViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +48,58 @@ public class HomeActivity extends AppCompatActivity implements NavigationBarView
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         menuLeft = findViewById(R.id.drawerLayout);
         navigationView = findViewById(R.id.navigationView);
+        avatarLoginMenu = findViewById(R.id.avatarMenu);
+        nameWorkmateLog = findViewById(R.id.namePseudoMenu);
+        mailWorkmateLog = findViewById(R.id.mailPseudoMenu);
 
         setSupportActionBar(toolbar);
 
         configureDrawerLayout();
         configureNavigationView();
+        //configureAvatarWorkmate();
+
+    }
+
+    private void configureNameWorkmate() {
+        String name = TextUtils.isEmpty(workmateViewModel.getCurrentUser().getDisplayName()) ?
+                getString(R.string.no_username_found) : workmateViewModel.getCurrentUser().getDisplayName();
+        nameWorkmateLog.setText(name);
+
+        String mail = TextUtils.isEmpty(workmateViewModel.getCurrentUser().getEmail()) ?
+                getString(R.string.no_usermail_found) : workmateViewModel.getCurrentUser().getEmail();
+        mailWorkmateLog.setText(mail);
+    }
+
+    // à voir null objet
+    private void configureAvatarWorkmate() {
+      /*  if (workmateViewModel.isCurrentWorkmateLogin()) {
+            FirebaseUser firebaseUser = workmateViewModel.getCurrentUser();
+            configureNameWorkmate(firebaseUser);
+            if (firebaseUser.getPhotoUrl() != null) {
+                Glide.with(this)
+                        .load("https://ui-avatars.com/api/?name=" + firebaseUser.getPhotoUrl() + "&background=random")
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(avatarLoginMenu);
+            } else {
+                Glide.with(this)
+                        .load("https://ui-avatars.com/api/?name=Ma&background=random")
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(avatarLoginMenu);
+            }
+        }*/
+        if (workmateViewModel.getCurrentWorkmate() != null) {
+            configureNameWorkmate();
+
+            if (workmateViewModel.getCurrentWorkmate().getPhotoUrl() != null) {
+
+                Glide.with(this)
+                        .load("https://ui-avatars.com/api/?name=" + workmateViewModel.getCurrentWorkmate().getPhotoUrl() + "&background=random")
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(avatarLoginMenu);
+            } else {
+                avatarLoginMenu.setImageResource(R.drawable.ic_baseline_people_24);
+            }
+        }
     }
 
     private void configureNavigationView() {

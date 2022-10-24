@@ -8,30 +8,34 @@
 
     <ImageView
         android:id="@+id/imageProfilRestaurant"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="250dp"
         android:src="@drawable/workersblur"
-        tools:ignore="MissingConstraints">
+        app:layout_constraintBottom_toTopOf="@+id/descriptionRestaurant"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="33dp">
+
     </ImageView>
 
     <TextView
         android:id="@+id/descriptionRestaurant"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="-16dp"
-        tools:layout_editor_absoluteY="250dp"
         android:background="@color/red"
         android:text="restaurant"
         android:textColor="@color/white"
-        tools:ignore="MissingConstraints">
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="334dp"
+        app:layout_constraintTop_toBottomOf="@id/imageProfilRestaurant" >
+
     </TextView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addworkmateRestaurant"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:src="@drawable/ic_baseline_people_24"
+        android:background="@color/quantum_yellow"
+        android:src="@drawable/ic_baseline_fastfood_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/descriptionRestaurant"
         app:layout_constraintHorizontal_bias="0.954"
@@ -43,8 +47,8 @@
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="293dp"
-        android:layout_height="54dp"
+        android:layout_width="266dp"
+        android:layout_height="53dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -96,5 +100,7 @@
         tools:layout_editor_absoluteX="0dp">
 
     </androidx.recyclerview.widget.RecyclerView>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
