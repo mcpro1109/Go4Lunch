@@ -125,7 +125,7 @@ public class RestaurantMapFragment extends Fragment implements GoogleMap.OnPoiCl
         //set position on marker
         markerOptions.position(paris)
                 //set title of marker
-                .title(paris.latitude + " " + paris.longitude);
+                .title("Paris");
         //remove all markets
         googleMap.clear();
         //animate to zoom at the opening

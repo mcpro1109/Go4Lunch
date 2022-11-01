@@ -19,11 +19,7 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField "String", "MAPS_API_KEY", "\"AIzaSyB2WKROdZugHMzJvr_LaVUT3y_PcXzs1xE\""
-            buildConfigField "String", "PLACES_API_KEY", "\"AIzaSyA60FgwXAAt5RU6Dctyrtyy9dDMApfz16w\""
-            buildConfigField "String", "FACEBOOK_ID", "\"762277954834199\""
-            buildConfigField "String", "FACEBOOK_LOGIN", "\"fb762277954834199\""
-            buildConfigField "String", "FACEBOOK_CLIENT", "\"67cbefb1268af1bcbee89e37718db64e\""
+
         }
         release {
             minifyEnabled false

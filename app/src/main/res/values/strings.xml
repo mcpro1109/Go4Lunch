@@ -5,9 +5,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="map_api">MAPS_API_KEY</string>
 
-    <string name="facebook_application_id">762277954834199</string>
-    <string name="fb_login_protocol_scheme">fb762277954834199</string>
-    <string name="facebook_client_token">67cbefb1268af1bcbee89e37718db64e</string>
+  
 
     <string name="no_username_found">No username found</string>
     <string name="no_usermail_found">No usermail found</string>

@@ -225,8 +225,6 @@ public class Result {
         this.vicinity = vicinity;
     }
 
-    private float[] distanceResults = new float[3];
-
     public String getFormattedPhoneNumber() {
         return formattedPhoneNumber;
     }
@@ -235,6 +233,7 @@ public class Result {
         this.formattedPhoneNumber = formattedPhoneNumber;
     }
 
+    private float[] distanceResults = new float[3];
     private void getDistance(String startLocation, Location endLocation){
         String[] separatedStart = startLocation.split(",");
         double startLatitude = Double.parseDouble(separatedStart[0]);
