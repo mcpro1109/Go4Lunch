@@ -4,34 +4,43 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="12dp"
-    android:orientation="vertical">
+    android:layout_marginTop="12dp">
 
 
     <TextView
         android:id="@+id/textRestaurant"
         android:layout_width="220dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="12dp"
         android:text="restaurant"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/numberWorkmate"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        >
+        app:layout_constraintTop_toTopOf="parent" />
 
-    </TextView>
+
+    <RatingBar
+        android:id="@+id/ratingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:isIndicator="true"
+        android:numStars="5"
+        android:scaleX=".5"
+        android:scaleY="0.5"
+        android:theme="@style/RatingBar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/numberWorkmate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/logoWorkmates"
         app:layout_constraintStart_toEndOf="@+id/textRestaurant"
-        app:layout_constraintTop_toTopOf="parent">
-
-    </TextView>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/logoWorkmates"
@@ -39,26 +48,19 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_baseline_people_24"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/imageRestaurant"
-        app:layout_constraintHorizontal_bias="0.761"
         app:layout_constraintStart_toEndOf="@+id/numberWorkmate"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.534">
-
-    </ImageView>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imageRestaurant"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_margin="16dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_margin="12dp"
         android:src="@drawable/ic_baseline_circle_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/logoWorkmates"
-        app:layout_constraintTop_toTopOf="parent"
-       >
+        app:layout_constraintTop_toTopOf="parent" />
 
-    </ImageView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

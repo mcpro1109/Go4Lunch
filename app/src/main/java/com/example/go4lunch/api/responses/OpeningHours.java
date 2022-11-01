@@ -18,4 +18,6 @@ public class OpeningHours {
         this.openNow = openNow;
     }
 
+    
+
 }

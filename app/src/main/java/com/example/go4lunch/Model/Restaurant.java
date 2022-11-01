@@ -1,48 +1,51 @@
 package com.example.go4lunch.Model;
 
 
-import android.media.Image;
+import android.location.Location;
 
 import androidx.annotation.Nullable;
 
-import com.example.go4lunch.api.responses.OpeningHours;
-import com.example.go4lunch.api.responses.Photo;
+import com.example.go4lunch.BuildConfig;
+import com.example.go4lunch.api.responses.CurrentOpeningHours;
 import com.example.go4lunch.api.responses.RestaurantResponse;
+import com.example.go4lunch.api.responses.Result;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
 
 import java.io.Serializable;
-import java.sql.Time;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public class Restaurant implements Serializable {
     private String name;
     private int distance;
     @Nullable
-    private String imageURL;
+    private String imageReference;
     @Nullable
     private String type;
     private String address;
     private int people;
-    private Boolean hoursOpen;
+    private CurrentOpeningHours hoursOpen;
     private double opinion;
     private String phoneNumber;
     private String website;
 
 
     public Restaurant(String name, int distance,
-                      @Nullable String imageURL, @Nullable String type,
-                      String address, Boolean hoursOpen,
+                      @Nullable String imageReference, @Nullable String type,
+                      String address, CurrentOpeningHours hoursOpen,
                       int people, double opinion,
                       String phoneNumber, String website) {
         this.name = name;
         this.distance = distance;
-        this.imageURL = imageURL;
+        this.imageReference = imageReference;
         this.type = type;
         this.address = address;
-        this.hoursOpen=hoursOpen;
+        this.hoursOpen = hoursOpen;
         this.people = people;
         this.opinion = opinion;
-        this.phoneNumber=phoneNumber;
-        this.website=website;
+        this.phoneNumber = phoneNumber;
+        this.website = website;
     }
 
     public String getPhoneNumber() {
@@ -53,19 +56,18 @@ public class Restaurant implements Serializable {
         this.phoneNumber = phoneNumber;
     }
 
-    public void setImageURL(@Nullable String imageURL) {
-        this.imageURL = imageURL;
+    public void setImageReference(@Nullable String imageReference) {
+        this.imageReference = imageReference;
     }
 
-    public Boolean getHoursOpen() {
+    public CurrentOpeningHours getHoursOpen() {
         return hoursOpen;
     }
 
-    public void setHoursOpen(Boolean hoursOpen) {
+    public void setHoursOpen(CurrentOpeningHours hoursOpen) {
         this.hoursOpen = hoursOpen;
     }
 
-    public Restaurant(){}
 
     public String getName() {
         return name;
@@ -81,15 +83,6 @@ public class Restaurant implements Serializable {
 
     public void setDistance(int distance) {
         this.distance = distance;
-    }
-
-    @Nullable
-    public String getImageURL() {
-        return imageURL;
-    }
-
-    public void setImage(@Nullable String imageURL) {
-        this.imageURL = imageURL;
     }
 
     @Nullable
@@ -133,5 +126,33 @@ public class Restaurant implements Serializable {
 
     public void setWebsite(String website) {
         this.website = website;
+    }
+
+    public String getImageURL(int width) {
+        return "https://maps.googleapis.com/maps/api/place/photo?maxwidth=" + width + "&photoreference=" +
+                imageReference +
+                "&key=" +
+                BuildConfig.PLACES_API_KEY;
+    }
+
+
+    public static Restaurant fromGoogleResponse(Location queryCenter, Result result) {
+
+
+        return new Restaurant(
+                result.getName(),
+                (int) queryCenter.distanceTo(result.getGeometry().getLocation()),
+
+                result.getPhotos().get(0).getPhotoReference(),
+                result.getTypes().get(0),
+                //address,
+                result.getVicinity(),
+                //(CurrentOpeningHours) result.getCurrentOpeningHours().getPeriods(),
+                result.getCurrentOpeningHours(),
+                2,
+                result.getRating(),
+                result.getFormattedPhoneNumber(),
+                result.getWebsite()
+        );
     }
 }

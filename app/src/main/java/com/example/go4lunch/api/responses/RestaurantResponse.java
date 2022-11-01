@@ -13,6 +13,9 @@ public class RestaurantResponse {
     @SerializedName("results")
     @Expose
     private List<Result> results = null;
+    @SerializedName("result")
+    @Expose
+    private Result result;
     @SerializedName("status")
     @Expose
     private String status;
@@ -41,4 +44,22 @@ public class RestaurantResponse {
         this.status = status;
     }
 
+    public Result getResult() {
+        return result;
+    }
+
+    public void setResult(Result result) {
+        this.result = result;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+

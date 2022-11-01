@@ -13,34 +13,31 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.go4lunch.Model.Restaurant;
 import com.example.go4lunch.R;
 import com.example.go4lunch.RestaurantProfilActivity;
-import com.example.go4lunch.Viewmodel.RestaurantListViewModel;
 import com.example.go4lunch.Viewmodel.HomeFragmentsViewModel;
 import com.example.go4lunch.adapter.RestaurantListFragmentRecyclerViewAdapter;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class RestaurantListFragment extends Fragment {
 
-    private RestaurantListViewModel restaurantListViewModel;
     private RecyclerView recyclerView;
     HomeFragmentsViewModel homeFragmentsViewModel;
-    RestaurantListFragmentRecyclerViewAdapter adapter1;
 
     ArrayList<Restaurant> restaurants = new ArrayList<>();
 
     RestaurantListFragmentRecyclerViewAdapter adapter = new RestaurantListFragmentRecyclerViewAdapter(restaurants,
-            (v, position) -> {
-                RestaurantProfilActivity.navigate(getActivity(), restaurants.get(position));
+            new RestaurantListFragmentRecyclerViewAdapter.RestaurantAdapterListener() {
+                @Override
+                public void onClick(Restaurant restaurant) {
+                    RestaurantProfilActivity.navigate(getActivity(), restaurant);
+                }
             });
-
 
     public static RestaurantListFragment newInstance() {
         return new RestaurantListFragment();
@@ -68,21 +65,16 @@ public class RestaurantListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         homeFragmentsViewModel = new ViewModelProvider(getActivity()).get(HomeFragmentsViewModel.class);
 
-
-        observeText();
-        // homeFragmentsViewModel.loadRestaurantsList();
+        observeList();
 
         homeFragmentsViewModel.start();
-
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private void observeText() {
+    private void observeList() {
         homeFragmentsViewModel.getRestaurantData().observe(getViewLifecycleOwner(), restaurants -> {
             adapter.update(restaurants);
-
         });
-
     }
 
 }

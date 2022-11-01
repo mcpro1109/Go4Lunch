@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="RatingBar" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@color/yellow</item>
+        <item name="colorControlActivated">@color/yellow</item>
+    </style>
+    <style name="App.ToolbarStyle" parent="@style/Widget.Material3.Toolbar">
+        <item name="navigationIconTint">@android:color/white</item>
+    </style>
+</resources>

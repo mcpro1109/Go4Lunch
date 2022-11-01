@@ -1,7 +1,10 @@
 
 package com.example.go4lunch.api.responses;
 
+import android.location.Location;
+
 import java.util.List;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -25,9 +28,7 @@ public class Result {
     @SerializedName("name")
     @Expose
     private String name;
-    @SerializedName("opening_hours")
-    @Expose
-    private OpeningHours openingHours;
+
     @SerializedName("photos")
     @Expose
     private List<Photo> photos = null;
@@ -58,14 +59,43 @@ public class Result {
     @SerializedName("vicinity")
     @Expose
     private String vicinity;
-    @SerializedName("phone_number")
-    @Expose
-    private String phoneNumber;
-    @SerializedName("web_site_uri")
-    @Expose
-    private String websiteUri;
 
+    @SerializedName("formatted_phone_number")
+    @Expose
+    private String formattedPhoneNumber;
 
+    @SerializedName("current_opening_hours")
+    @Expose
+    private CurrentOpeningHours currentOpeningHours;
+    @SerializedName("website")
+    @Expose
+    private String website;
+    @SerializedName("url")
+    @Expose
+    public String url;
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public CurrentOpeningHours getCurrentOpeningHours() {
+        return currentOpeningHours;
+    }
+
+    public void setCurrentOpeningHours(CurrentOpeningHours currentOpeningHours) {
+        this.currentOpeningHours = currentOpeningHours;
+    }
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
 
     public String getBusinessStatus() {
         return businessStatus;
@@ -113,14 +143,6 @@ public class Result {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public OpeningHours getOpeningHours() {
-        return openingHours;
-    }
-
-    public void setOpeningHours(OpeningHours openingHours) {
-        this.openingHours = openingHours;
     }
 
     public List<Photo> getPhotos() {
@@ -203,19 +225,24 @@ public class Result {
         this.vicinity = vicinity;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    private float[] distanceResults = new float[3];
+
+    public String getFormattedPhoneNumber() {
+        return formattedPhoneNumber;
     }
 
-    public String getWebsiteUri() {
-        return websiteUri;
+    public void setFormattedPhoneNumber(String formattedPhoneNumber) {
+        this.formattedPhoneNumber = formattedPhoneNumber;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    private void getDistance(String startLocation, Location endLocation){
+        String[] separatedStart = startLocation.split(",");
+        double startLatitude = Double.parseDouble(separatedStart[0]);
+        double startLongitude = Double.parseDouble(separatedStart[1]);
+        double endLatitude = endLocation.getLatitude();
+        double endLongitude = endLocation.getLongitude();
+        android.location.Location.distanceBetween(startLatitude, startLongitude, endLatitude, endLongitude,distanceResults);
     }
 
-    public void setWebsiteUri(String websiteUri) {
-        this.websiteUri = websiteUri;
-    }
+
 }

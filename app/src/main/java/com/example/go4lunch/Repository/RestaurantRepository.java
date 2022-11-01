@@ -7,6 +7,7 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
+import com.example.go4lunch.BuildConfig;
 import com.example.go4lunch.Model.Restaurant;
 import com.example.go4lunch.MyApp;
 import com.example.go4lunch.api.API;
@@ -14,6 +15,7 @@ import com.example.go4lunch.api.responses.RestaurantResponse;
 import com.example.go4lunch.api.responses.Result;
 import com.example.go4lunch.utils.OnResult;
 import com.google.android.libraries.places.api.model.OpeningHours;
+import com.google.android.libraries.places.api.model.Place;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,10 +43,11 @@ public class RestaurantRepository {
 
         API.getPlacesAPI()
                 .getNearbyPlaces(
+                        "contact",
                         1500,
                         location.getLatitude() + "," + location.getLongitude(),
                         "restaurant",
-                        "x"
+                        BuildConfig.PLACES_API_KEY
                 )
                 .enqueue(new Callback<RestaurantResponse>() {
                     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -52,34 +55,14 @@ public class RestaurantRepository {
                     public void onResponse(Call<RestaurantResponse> call, Response<RestaurantResponse> response) {
                         Log.e("CALL -> ", response.body().toString());
 
-                       // Geocoder geocoder = new Geocoder(MyApp.app, Locale.getDefault());
+
+                        // Geocoder geocoder = new Geocoder(MyApp.app, Locale.getDefault());
 
                         if (response.isSuccessful()) {
-                           List<Result> results = response.body().getResults();
+                            List<Result> results = response.body().getResults();
 
-                            for(Result result : results){
-                              /*  String address = "adress";
-                                try {
-                                    address = geocoder.getFromLocation(result.getGeometry().getLocation().getLatitude(), result.getGeometry().getLocation().getLongitude(), 1).get(0).toString();
-                                }catch (Exception e){
-                                    e.printStackTrace();
-                                }*/
-
-                                Restaurant restaurant = new Restaurant(
-                                        result.getName(),
-                                        (int) location.distanceTo(result.getGeometry().getLocation()),
-                                        result.getPhotos().get(0).toString(),
-                                        result.getTypes().get(0),
-                                        //address,
-                                        result.getVicinity(),
-                                        result.getOpeningHours().isOpenNow(),
-                                        2,
-                                        result.getRating(),
-                                        result.getPhoneNumber(),
-                                        result.getWebsiteUri()
-                                );
-
-                                restaurants.add(restaurant);
+                            for (Result result : results) {
+                                restaurants.add(Restaurant.fromGoogleResponse(location, result));
                             }
                         } else {
                             Log.e("CALL2 -> ", "erreur");
@@ -89,13 +72,13 @@ public class RestaurantRepository {
                     }
 
                     @Override
-                    public void onFailure (Call < RestaurantResponse > call, Throwable t){
+                    public void onFailure(Call<RestaurantResponse> call, Throwable t) {
                         Log.e("CALL -> ", "ERROR " + t.getMessage());
                         t.printStackTrace();
                         onResult.onFailure();
                     }
-
                 });
+
 
         /*firebaseFirestore
                 .collection("restaurants")
@@ -112,5 +95,5 @@ public class RestaurantRepository {
                     e.printStackTrace();
                     onResult.onFailure();
                 });*/
-                }
     }
+}
