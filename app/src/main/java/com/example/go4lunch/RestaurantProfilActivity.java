@@ -11,6 +11,7 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -22,6 +23,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunch.Model.Restaurant;
+import com.example.go4lunch.api.responses.Result;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.Serializable;
@@ -50,7 +52,6 @@ public class RestaurantProfilActivity extends AppCompatActivity {
         webButton = findViewById(R.id.webButton);
         toolbarProfil=findViewById(R.id.toolbarProfil);
 
-
         //back with toolbar
         setSupportActionBar(toolbarProfil);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -76,11 +77,13 @@ public class RestaurantProfilActivity extends AppCompatActivity {
         phoneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+              /*  Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                callIntent.setData(Uri.parse("tel:" + 0134770565));
+                startActivity(callIntent);*/
                 String number = restaurant.getPhoneNumber();
                 if (number!=null) {
-                    Intent callIntent = new Intent(Intent.ACTION_CALL);
-                    callIntent.setData(Uri.parse("tel:" + number));
+                    Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                    callIntent.setData(Uri.parse("tel:" + restaurant.getPhoneNumber()));
                     startActivity(callIntent);
                 }else{
                     Toast.makeText(RestaurantProfilActivity.this, "no phone", Toast.LENGTH_SHORT).show();
@@ -91,10 +94,13 @@ public class RestaurantProfilActivity extends AppCompatActivity {
         webButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+              /*  Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
+                startActivity(webIntent);*/
                 if (restaurant.getWebsite()!=null) {
-                    OpenWebSite(restaurant.getWebsite());
-                    //Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(restaurant.getWebsite()));
-                   // startActivity(webIntent);
+                   // OpenWebSite(restaurant.getWebsite());
+
+                    Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(restaurant.getWebsite()));
+                    startActivity(webIntent);
                 }else{
                     Toast.makeText(RestaurantProfilActivity.this, "no website", Toast.LENGTH_SHORT).show();
                 }

@@ -19,7 +19,7 @@ import android.view.ViewGroup;
 import com.example.go4lunch.Model.Restaurant;
 import com.example.go4lunch.R;
 import com.example.go4lunch.RestaurantProfilActivity;
-import com.example.go4lunch.Viewmodel.HomeFragmentsViewModel;
+import com.example.go4lunch.Viewmodel.HomeActivityViewModel;
 import com.example.go4lunch.adapter.RestaurantListFragmentRecyclerViewAdapter;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ import java.util.ArrayList;
 public class RestaurantListFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    HomeFragmentsViewModel homeFragmentsViewModel;
+    HomeActivityViewModel homeActivityViewModel;
 
     ArrayList<Restaurant> restaurants = new ArrayList<>();
 
@@ -63,16 +63,15 @@ public class RestaurantListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        homeFragmentsViewModel = new ViewModelProvider(getActivity()).get(HomeFragmentsViewModel.class);
+        homeActivityViewModel = new ViewModelProvider(getActivity()).get(HomeActivityViewModel.class);
 
         observeList();
 
-        homeFragmentsViewModel.start();
+        homeActivityViewModel.start();
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private void observeList() {
-        homeFragmentsViewModel.getRestaurantData().observe(getViewLifecycleOwner(), restaurants -> {
+        homeActivityViewModel.getRestaurantData().observe(getViewLifecycleOwner(), restaurants -> {
             adapter.update(restaurants);
         });
     }

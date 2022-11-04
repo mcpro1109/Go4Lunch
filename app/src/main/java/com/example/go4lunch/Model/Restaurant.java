@@ -9,11 +9,8 @@ import com.example.go4lunch.BuildConfig;
 import com.example.go4lunch.api.responses.CurrentOpeningHours;
 import com.example.go4lunch.api.responses.RestaurantResponse;
 import com.example.go4lunch.api.responses.Result;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.net.PlacesClient;
 
 import java.io.Serializable;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public class Restaurant implements Serializable {
@@ -29,13 +26,29 @@ public class Restaurant implements Serializable {
     private double opinion;
     private String phoneNumber;
     private String website;
+    private Double latitude;
+    private Double longitude;
 
+    public Double getLongitude() {
+        return longitude;
+    }
 
-    public Restaurant(String name, int distance,
-                      @Nullable String imageReference, @Nullable String type,
-                      String address, CurrentOpeningHours hoursOpen,
-                      int people, double opinion,
-                      String phoneNumber, String website) {
+     public Double getLatitude() {
+        return latitude;
+    }
+
+    public Restaurant(String name,
+                      int distance,
+                      @Nullable String imageReference,
+                      @Nullable String type,
+                      String address,
+                      CurrentOpeningHours hoursOpen,
+                      int people,
+                      double opinion,
+                      double latitude,
+                      double longitude,
+                      String phoneNumber,
+                      String website) {
         this.name = name;
         this.distance = distance;
         this.imageReference = imageReference;
@@ -43,6 +56,8 @@ public class Restaurant implements Serializable {
         this.address = address;
         this.hoursOpen = hoursOpen;
         this.people = people;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.opinion = opinion;
         this.phoneNumber = phoneNumber;
         this.website = website;
@@ -128,6 +143,10 @@ public class Restaurant implements Serializable {
         this.website = website;
     }
 
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
     public String getImageURL(int width) {
         return "https://maps.googleapis.com/maps/api/place/photo?maxwidth=" + width + "&photoreference=" +
                 imageReference +
@@ -137,12 +156,13 @@ public class Restaurant implements Serializable {
 
 
     public static Restaurant fromGoogleResponse(Location queryCenter, Result result) {
-
+        Location androidLocation = new Location("");
+        androidLocation.setLatitude(result.getGeometry().getLocation().getLat());
+        androidLocation.setLongitude(result.getGeometry().getLocation().getLng());
 
         return new Restaurant(
                 result.getName(),
-                (int) queryCenter.distanceTo(result.getGeometry().getLocation()),
-
+                (int) queryCenter.distanceTo(androidLocation),
                 result.getPhotos().get(0).getPhotoReference(),
                 result.getTypes().get(0),
                 //address,
@@ -151,7 +171,10 @@ public class Restaurant implements Serializable {
                 result.getCurrentOpeningHours(),
                 2,
                 result.getRating(),
-                result.getFormattedPhoneNumber(),
+               result.getGeometry().getLocation().getLat(),
+               result.getGeometry().getLocation().getLng(),
+               // result.getFormattedPhoneNumber(),
+                result.getInternationalPhoneNumber(),
                 result.getWebsite()
         );
     }

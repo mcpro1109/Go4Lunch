@@ -8,10 +8,14 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,11 +26,25 @@ import com.example.go4lunch.Fragment.RestaurantMapFragment;
 import com.example.go4lunch.Fragment.WorkmateFragment;
 import com.example.go4lunch.Repository.WorkmateRepository;
 import com.example.go4lunch.Viewmodel.WorkmateViewModel;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 public class HomeActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener, NavigationView.OnNavigationItemSelectedListener {
 
@@ -38,6 +56,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationBarView
     private TextView nameWorkmateLog;
     private TextView mailWorkmateLog;
     private WorkmateViewModel workmateViewModel;
+    private static int AUTOCOMPLETE_CODE = 1;
+    private GoogleMap map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +77,27 @@ public class HomeActivity extends AppCompatActivity implements NavigationBarView
         configureDrawerLayout();
         configureNavigationView();
         //configureAvatarWorkmate();
-
+       // configureSearchBar();
     }
+
+    private void configureSearchBar() {
+//Places must be initialized
+        AutocompleteSupportFragment autocompleteSupportFragment=(AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+        autocompleteSupportFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
+        autocompleteSupportFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(@NonNull Place place) {
+                Log.i("recherche", "Place: " + place.getName() + ", " + place.getId());
+            }
+
+            @Override
+            public void onError(@NonNull Status status) {
+                Log.i("recherche", "An error occurred: " + status);
+            }
+
+
+        });
+            }
 
     private void configureNameWorkmate() {
         String name = TextUtils.isEmpty(workmateViewModel.getCurrentUser().getDisplayName()) ?

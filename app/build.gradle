@@ -19,7 +19,11 @@ android {
 
     buildTypes {
         debug {
-
+            buildConfigField "String", "MAPS_API_KEY", "\"MAPS_API_KEY\""
+            buildConfigField "String", "PLACES_API_KEY", "\"AIzaSyA60FgwXAAt5RU6Dctyrtyy9dDMApfz16w\""
+            buildConfigField "String", "FACEBOOK_ID", "\"FACEBOOK_ID\""
+            buildConfigField "String", "FACEBOOK_LOGIN", "\"FACEBOOK_LOGIN\""
+            buildConfigField "String", "FACEBOOK_CLIENT", "\"FACEBOOK_CLIENT\""
         }
         release {
             minifyEnabled false
@@ -58,6 +62,7 @@ dependencies {
     //FIRESTORE
     implementation 'com.google.firebase:firebase-firestore:24.3.1'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'com.google.firebase:firebase-messaging'
 
     //facebook login
     //implementation 'com.facebook.android:facebook-android-sdk:5.13.0'
@@ -70,4 +75,7 @@ dependencies {
     implementation 'com.google.android.libraries.places:places:2.6.0'
     implementation 'com.squareup.retrofit2:retrofit:2.1.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
+    implementation 'com.google.android.gms:play-services-location:21.0.0'
+    implementation 'com.google.android.gms:play-services-places:17.0.0'
 }

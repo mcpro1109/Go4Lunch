@@ -3,8 +3,10 @@ package com.example.go4lunch.api.responses;
 
 import android.location.Location;
 
+import java.util.Arrays;
 import java.util.List;
 
+import com.google.android.libraries.places.api.model.Place;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -28,7 +30,6 @@ public class Result {
     @SerializedName("name")
     @Expose
     private String name;
-
     @SerializedName("photos")
     @Expose
     private List<Photo> photos = null;
@@ -59,11 +60,12 @@ public class Result {
     @SerializedName("vicinity")
     @Expose
     private String vicinity;
-
     @SerializedName("formatted_phone_number")
     @Expose
     private String formattedPhoneNumber;
-
+    @SerializedName("international_phone_number")
+    @Expose
+    private String internationalPhoneNumber;
     @SerializedName("current_opening_hours")
     @Expose
     private CurrentOpeningHours currentOpeningHours;
@@ -73,29 +75,6 @@ public class Result {
     @SerializedName("url")
     @Expose
     public String url;
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public CurrentOpeningHours getCurrentOpeningHours() {
-        return currentOpeningHours;
-    }
-
-    public void setCurrentOpeningHours(CurrentOpeningHours currentOpeningHours) {
-        this.currentOpeningHours = currentOpeningHours;
-    }
-    public String getWebsite() {
-        return website;
-    }
-
-    public void setWebsite(String website) {
-        this.website = website;
-    }
 
     public String getBusinessStatus() {
         return businessStatus;
@@ -233,15 +212,43 @@ public class Result {
         this.formattedPhoneNumber = formattedPhoneNumber;
     }
 
-    private float[] distanceResults = new float[3];
-    private void getDistance(String startLocation, Location endLocation){
-        String[] separatedStart = startLocation.split(",");
-        double startLatitude = Double.parseDouble(separatedStart[0]);
-        double startLongitude = Double.parseDouble(separatedStart[1]);
-        double endLatitude = endLocation.getLatitude();
-        double endLongitude = endLocation.getLongitude();
-        android.location.Location.distanceBetween(startLatitude, startLongitude, endLatitude, endLongitude,distanceResults);
+    List<Place.Field> fields= Arrays.asList(Place.Field.PHONE_NUMBER);
+    final CharSequence phoneNumber=Place.builder().getPhoneNumber();
+
+    public String getPhoneNumber(){
+        return (String) phoneNumber;
     }
 
+    public String getInternationalPhoneNumber() {
+        return internationalPhoneNumber;
+    }
 
+    public void setInternationalPhoneNumber(String internationalPhoneNumber) {
+        this.internationalPhoneNumber = internationalPhoneNumber;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public CurrentOpeningHours getCurrentOpeningHours() {
+        return currentOpeningHours;
+    }
+
+    public void setCurrentOpeningHours(CurrentOpeningHours currentOpeningHours) {
+        this.currentOpeningHours = currentOpeningHours;
+    }
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    private final float[] distanceResults = new float[3];
 }
