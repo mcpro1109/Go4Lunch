@@ -69,8 +69,7 @@ public class RestaurantListFragmentRecyclerViewAdapter extends RecyclerView.Adap
                         "   " + restaurant.getDistance() +
                         "m \n" +
                         description +
-                        " \n" +
-                        restaurant.getHoursOpen()
+                        " \n"
                         );
 
         text.setSpan(new StyleSpan(Typeface.BOLD), 0, nameRestaurant.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

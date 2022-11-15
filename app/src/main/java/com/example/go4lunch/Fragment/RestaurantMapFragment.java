@@ -4,6 +4,7 @@ import static android.content.ContentValues.TAG;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.location.Location;
@@ -12,19 +13,27 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.go4lunch.Model.Restaurant;
+import com.example.go4lunch.Model.RestaurantDetails;
 import com.example.go4lunch.R;
+import com.example.go4lunch.RestaurantProfilActivity;
 import com.example.go4lunch.Viewmodel.HomeActivityViewModel;
 import com.example.go4lunch.Viewmodel.RestaurantMapViewModel;
+import com.example.go4lunch.Viewmodel.RestaurantProfileActivityViewModel;
 import com.example.go4lunch.adapter.CustomWindowInfoAdapter;
+import com.example.go4lunch.adapter.RestaurantListFragmentRecyclerViewAdapter;
+import com.example.go4lunch.api.responsesDetails.ResultDetails;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
@@ -41,22 +50,26 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class RestaurantMapFragment extends Fragment implements GoogleMap.OnPoiClickListener,
+public class RestaurantMapFragment extends Fragment implements
         GoogleMap.OnMyLocationButtonClickListener,
         GoogleMap.OnMyLocationClickListener,
         OnMapReadyCallback,
         ActivityCompat.OnRequestPermissionsResultCallback,
-        GoogleMap.OnMapClickListener, GoogleMap.OnMarkerClickListener {
+        GoogleMap.OnMapClickListener,
+        GoogleMap.OnInfoWindowClickListener,
+        GoogleMap.OnMarkerClickListener {
 
     private static final int AUTOCOMPLETE_REQUEST_CODE = 1;
     private RestaurantMapViewModel restaurantMapViewModel;
     HomeActivityViewModel homeActivityViewModel;
+    RestaurantProfileActivityViewModel restaurantProfileActivityViewModel;
     MapView mapView;
     private GoogleMap map;
     private PlacesClient PlacesClient;
@@ -66,6 +79,9 @@ public class RestaurantMapFragment extends Fragment implements GoogleMap.OnPoiCl
     private Marker marker;
     private Restaurant restaurant;
     private ArrayList<Restaurant> restaurantArrayList;
+    private CustomWindowInfoAdapter customWindowInfoAdapter;
+
+
 
     public static RestaurantMapFragment newInstance() {
         return new RestaurantMapFragment();
@@ -90,8 +106,6 @@ public class RestaurantMapFragment extends Fragment implements GoogleMap.OnPoiCl
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         map = googleMap;
-
-        observeList();
 
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         //position
@@ -118,18 +132,19 @@ public class RestaurantMapFragment extends Fragment implements GoogleMap.OnPoiCl
         //set position on marker
         markerOptions.position(paris)
                 //set title of marker
-                .title("Paris");
+                .title("Paris")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
         //remove all markets
         googleMap.clear();
         //animate to zoom at the opening
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(paris, 18));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(paris, 17));
         //add marker on map
         googleMap.addMarker(markerOptions);
 
         //click on a POI to have the window of information
         map.setOnMapClickListener(RestaurantMapFragment.this);
         map.setOnMarkerClickListener(this);
-        googleMap.setOnPoiClickListener(this);
+        // googleMap.setOnPoiClickListener(this);
 
         try {
             // Customise the styling of the base map using a JSON object defined
@@ -144,21 +159,47 @@ public class RestaurantMapFragment extends Fragment implements GoogleMap.OnPoiCl
         } catch (Resources.NotFoundException e) {
             Log.e(TAG, "Can't find style. Error: ", e);
         }
+
+        //to have the infobulle
+        observeList();
+        map.setOnInfoWindowClickListener(this);
+
+
     }
+
 
     private void observeList() {
-        homeActivityViewModel.getRestaurantData().observe(getViewLifecycleOwner(), restaurants -> {
-            map.clear();
+        homeActivityViewModel.getRestaurantData().observe(getViewLifecycleOwner(), new Observer<ArrayList<Restaurant>>() {
+            @Override
+            public void onChanged(ArrayList<Restaurant> restaurants) {
+                // map.clear();
 
-            for(Restaurant restaurant : restaurants){
-                map.addMarker(
-                        new MarkerOptions()
-                                .position(new LatLng(restaurant.getLatitude(), restaurant.getLongitude()))
-                                .title(restaurant.getName())
-                ).setTag(restaurant.getName());
+                for (Restaurant restaurant : restaurants) {
+                    CustomWindowInfoAdapter markerInfoWindowAdapter = new CustomWindowInfoAdapter(getContext());
+
+                    map.setInfoWindowAdapter(markerInfoWindowAdapter);
+
+                    String infoRestaurant = restaurant.getAddress() + "\n" + "opinion: " + restaurant.getOpinion();
+                    Marker marker=map.addMarker(
+                            new MarkerOptions()
+                                    .position(new LatLng(restaurant.getLatitude(), restaurant.getLongitude()))
+                                    .title(restaurant.getName())
+
+                                    .snippet(infoRestaurant)
+                    );
+                            marker.setTag(restaurant.getId());
+                            marker.showInfoWindow();
+
+
+                }
+
+
             }
+
         });
+
     }
+
 
     @SuppressLint("MissingPermission")
     private void enableMyLocation() {
@@ -183,6 +224,8 @@ public class RestaurantMapFragment extends Fragment implements GoogleMap.OnPoiCl
         getLocationPermission();
 
         homeActivityViewModel.start();
+
+
     }
 
     private void observeView() {
@@ -193,59 +236,7 @@ public class RestaurantMapFragment extends Fragment implements GoogleMap.OnPoiCl
 
     }
 
-    @Override
-    public void onPoiClick(@NonNull PointOfInterest pointOfInterest) {
-        //ici pour avoir les infos bulles
-       /* Log.d("essai_clic", "Clicked: " +
-                pointOfInterest.name + "\nPlace ID:" + pointOfInterest.placeId +
-                "\nLatitude:" + pointOfInterest.latLng.latitude +
-                " Longitude:" + pointOfInterest.latLng.longitude
-        );
-        Toast.makeText(getActivity(), "click" + pointOfInterest.name, Toast.LENGTH_SHORT).show();*/
 
-        map.clear();
-
-
-        //window info restaurant
-        CustomWindowInfoAdapter markerInfoWindowAdapter = new CustomWindowInfoAdapter(getContext());
-        map.setInfoWindowAdapter(markerInfoWindowAdapter);
-
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(pointOfInterest.latLng);
-
-        // String infos= restaurant.getType() + "\n" + restaurant.getAddress()+ "\n" + restaurant.getOpinion();
-        Marker restaurantClick = map.addMarker(new MarkerOptions()
-                .position(pointOfInterest.latLng)
-                //infos to receive here
-                .title(pointOfInterest.name)
-                .snippet("infos:" + pointOfInterest.latLng)
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-        );
-        restaurantClick.showInfoWindow();
-
-
-      /*  BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE);
-        Marker marker = map.addMarker(new MarkerOptions()
-                .position(pointOfInterest.latLng)
-                .title("ici")
-                .snippet("snipper")
-                .icon(bitmapDescriptor));*/
-
-    }
-
-    public void setMarckerOnMap(GoogleMap googleMap, ArrayList<Restaurant> restaurantArrayList) {
-        for (Restaurant restaurant : restaurantArrayList) {
-            String infos = restaurant.getType() + "\n" + restaurant.getAddress() + "\n" + restaurant.getOpinion();
-
-            Marker restaurantClick = map.addMarker(new MarkerOptions()
-                    .position(new LatLng(restaurant.getLatitude(), restaurant.getLongitude()))
-                    //infos to receive here
-                    .title(restaurant.getName())
-                    .snippet("infos:" + infos)
-            );
-            restaurantClick.showInfoWindow();
-        }
-    }
 
 
     private void getLocationPermission() {
@@ -295,15 +286,36 @@ public class RestaurantMapFragment extends Fragment implements GoogleMap.OnPoiCl
 
     @Override
     public boolean onMarkerClick(@NonNull Marker marker) {
-        if(marker.getTag() != null){
+        if (marker.getTag() != null) {
             Restaurant restaurant = homeActivityViewModel.getRestaurantByTag(marker.getTag().toString());
 
-            if(restaurant != null){
+            if (restaurant != null) {
 
             }
 
-            return restaurant != null;
+            return false;
         }
         return false;
+    }
+
+    @Override
+    public void onInfoWindowClick(@NonNull Marker marker) {
+
+        String title = marker.getTitle();
+        Toast.makeText(getActivity(), title, Toast.LENGTH_SHORT).show();
+        if (marker.getTag() != null) {
+            Restaurant restaurant = homeActivityViewModel.getRestaurantByTag(marker.getTag().toString());
+          //  RestaurantDetails restaurantDetails=restaurantProfileActivityViewModel.getRestaurantData().getValue();
+
+            if (restaurant != null) {
+                Intent intent = new Intent(RestaurantMapFragment.this.getActivity(), RestaurantProfilActivity.class);
+                intent.putExtra("restaurant",(Serializable) restaurant);
+              //  intent.putExtra("restaurantDetails", (Serializable) restaurantDetails);
+                startActivity(intent);
+            }
+
+
+        }
+
     }
 }

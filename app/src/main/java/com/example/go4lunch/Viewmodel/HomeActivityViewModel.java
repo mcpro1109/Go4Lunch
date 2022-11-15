@@ -24,9 +24,8 @@ public class HomeActivityViewModel extends ViewModel {
     }
 
     public void loadRestaurantsList(){
-        if(restaurantList.getValue().isEmpty()){
             restaurantRepository
-                    .loadRestaurantList(LocationBuilder.create( 48.86325926951382, 2.354244777246452), new OnResult<ArrayList<Restaurant>>() {
+                    .loadRestaurantList(LocationBuilder.create( 48.866667, 2.333333), new OnResult<ArrayList<Restaurant>>() {
                 @Override
                 public void onSuccess(ArrayList<Restaurant> data) {
                     restaurantList.setValue(data);
@@ -37,12 +36,13 @@ public class HomeActivityViewModel extends ViewModel {
 
                 }
             });
-        }
+
+
     }
 
     public Restaurant getRestaurantByTag(String tag) {
         for(Restaurant restaurant : getRestaurantData().getValue()){
-            if(restaurant.getName().equals(tag)) return restaurant;
+            if(restaurant.getId().equals(tag)) return restaurant;
         }
         return null;
     }

@@ -1,19 +1,24 @@
 package com.example.go4lunch.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
 
+import com.example.go4lunch.Fragment.RestaurantMapFragment;
 import com.example.go4lunch.Model.Restaurant;
 import com.example.go4lunch.R;
+import com.example.go4lunch.RestaurantProfilActivity;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class CustomWindowInfoAdapter implements GoogleMap.InfoWindowAdapter {
@@ -21,22 +26,12 @@ public class CustomWindowInfoAdapter implements GoogleMap.InfoWindowAdapter {
 
     private Context context;
 
+
     public CustomWindowInfoAdapter(Context context) {
         this.context = context;
+
     }
 
-    private void rendowWindowText(Marker marker, View view) {
-        String title = marker.getTitle();
-        TextView textViewTitle = (TextView) view.findViewById(R.id.titleInfo);
-        if (!title.equals("")) {
-            textViewTitle.setText(title);
-        }
-        String snippet = marker.getSnippet();
-        TextView textViewSnippet = (TextView) view.findViewById(R.id.snippet);
-        if (!snippet.equals("")) {
-            textViewSnippet.setText(snippet);
-        }
-    }
 
     @Nullable
     @Override
@@ -60,4 +55,5 @@ public class CustomWindowInfoAdapter implements GoogleMap.InfoWindowAdapter {
 
         return null;
     }
+
 }

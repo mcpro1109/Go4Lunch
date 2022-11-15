@@ -1,6 +1,7 @@
 package com.example.go4lunch.utils;
 
 import com.example.go4lunch.api.responses.RestaurantResponse;
+import com.example.go4lunch.api.responsesDetails.RestaurantResponseDetails;
 import com.firebase.ui.auth.data.model.PhoneNumber;
 import com.google.android.libraries.places.api.model.Place;
 
@@ -22,10 +23,17 @@ public interface PlacesAPI {
      */
     @GET("api/place/nearbysearch/json")
     Call<RestaurantResponse> getNearbyPlaces(
-            @Query("fields") String fields,
+
             @Query("radius") int radius,
             @Query("location") String location,
             @Query("type") String type,
+            @Query("key") String key
+    );
+
+    @GET("api/place/details/json")
+    Call<RestaurantResponseDetails> getDetailsPlaces(
+            @Query("place_id") String place_id,
+            @Query("fields") String fields,
             @Query("key") String key
     );
 }
