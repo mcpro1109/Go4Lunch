@@ -1,19 +1,13 @@
 package com.example.go4lunch.Viewmodel;
 
-import android.text.TextUtils;
-import android.widget.TextView;
-
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunch.Model.Workmate;
-import com.example.go4lunch.R;
-import com.example.go4lunch.utils.OnResult;
 import com.example.go4lunch.Repository.WorkmateRepository;
+import com.example.go4lunch.utils.OnResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -23,8 +17,6 @@ public class WorkmateViewModel extends ViewModel {
 
     private WorkmateRepository workmateRepository = WorkmateRepository.getInstance();
     private MutableLiveData<ArrayList<Workmate>> workmateList = new MutableLiveData<>();
-
-
 
     public LiveData<ArrayList<Workmate>> getWorkmatesData() {
         return workmateList;
@@ -42,15 +34,17 @@ public class WorkmateViewModel extends ViewModel {
             }
         });
     }
+
     @Nullable
     public FirebaseUser getCurrentUser() {
         return FirebaseAuth.getInstance().getCurrentUser();
     }
+
     public FirebaseUser getCurrentWorkmate() {
         return getCurrentUser();
     }
 
-    public boolean isCurrentWorkmateLogin(){
-        return (this.getCurrentWorkmate() !=null);
+    public boolean isCurrentWorkmateLogin() {
+        return (this.getCurrentWorkmate() != null);
     }
 }

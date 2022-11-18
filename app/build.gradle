@@ -67,17 +67,14 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging'
 
     //facebook login
-    //implementation 'com.facebook.android:facebook-android-sdk:5.13.0'
     implementation 'com.facebook.android:facebook-android-sdk:[8,9)'
 
     //map
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
     implementation 'pub.devrel:easypermissions:3.0.0'
     //places
-    implementation 'com.google.android.libraries.places:places:2.6.0'
     implementation 'com.squareup.retrofit2:retrofit:2.1.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
     implementation 'com.google.android.gms:play-services-location:21.0.0'
-    implementation 'com.google.android.gms:play-services-places:17.0.0'
 }

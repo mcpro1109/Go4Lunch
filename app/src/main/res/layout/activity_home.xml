@@ -16,25 +16,22 @@
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbarmenu"
                     android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
+                    android:layout_height="wrap_content"
                     android:background="@color/red"
                     android:elevation="4dp"
-                    android:theme="@style/ThemeOverlay.AppCompat.DayNight.ActionBar"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:popupTheme="@style/Theme.AppCompat.Light"
                     app:title="I'm Hungry!"
                     app:titleTextColor="@color/white">
 
                 </androidx.appcompat.widget.Toolbar>
-                <fragment
+
+                <!--<fragment
                     android:id="@+id/autocomplete_fragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
                     android:background="#BFBFBF"
-                    />
-
-
+                    />-->
 
                 <androidx.fragment.app.FragmentContainerView
                     android:id="@+id/fragmentContainer"
@@ -70,7 +67,6 @@
             >
 
         </com.google.android.material.navigation.NavigationView>
-
 
 
 </androidx.drawerlayout.widget.DrawerLayout>

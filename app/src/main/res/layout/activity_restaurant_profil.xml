@@ -1,26 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".RestaurantProfilActivity">
-
+    android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:fitsSystemWindows="true"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:layout_constraintTop_toTopOf="parent">
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
@@ -29,16 +24,12 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbarProfil"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="wrap_content"
                 android:background="@color/red"
                 android:elevation="4dp"
                 android:theme="@style/ThemeOverlay.AppCompat.DayNight.ActionBar"
                 app:layout_constraintTop_toTopOf="parent"
-                app:popupTheme="@style/App.ToolbarStyle"
-
-                >
-
-            </androidx.appcompat.widget.Toolbar>
+                app:popupTheme="@style/App.ToolbarStyle" />
 
             <ImageView
                 android:id="@+id/imageProfilRestaurant"
@@ -54,8 +45,6 @@
                 app:layout_constraintTop_toTopOf="parent">
 
             </ImageView>
-
-
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
         <TextView
@@ -64,71 +53,29 @@
             android:layout_height="wrap_content"
             android:background="@color/red"
             android:paddingLeft="8dp"
+            android:paddingRight="80dp"
             android:text="restaurant"
             android:textColor="@color/white">
 
         </TextView>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/addworkmateRestaurant"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginRight="8dp"
-            android:background="@color/quantum_yellow"
-            android:src="@drawable/ic_baseline_fastfood_24">
-
-
-        </com.google.android.material.floatingactionbutton.FloatingActionButton>
-
     </com.google.android.material.appbar.AppBarLayout>
 
-  <!--  <LinearLayout
-        android:id="@+id/linearLayout"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addworkmateRestaurant"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/app_bar_layout">
-
-        <Button
-            android:id="@+id/phoneButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:drawableTop="@drawable/ic_baseline_phone_24"
-            android:text="CALL"
-            android:textColor="@color/red" />
-
-        <Button
-            android:id="@+id/likeButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:drawableTop="@drawable/ic_baseline_star_24"
-            android:text="LIKE"
-            android:textColor="@color/red" />
-
-        <Button
-            android:id="@+id/webButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:drawableTop="@drawable/ic_baseline_public_24"
-            android:text="WEBSITE"
-            android:textColor="@color/red" />
-    </LinearLayout>-->
+        android:layout_marginRight="16dp"
+        android:background="@color/yellow"
+        app:layout_anchorGravity="bottom|end"
+        app:layout_anchor="@id/app_bar_layout"
+        android:src="@drawable/ic_baseline_fastfood_24" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/restaurantProfileRecyclerview"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:scrollbars="vertical"
-        app:layout_constraintTop_toBottomOf="@id/app_bar_layout"
-       >
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"/>
 
-    </androidx.recyclerview.widget.RecyclerView>
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

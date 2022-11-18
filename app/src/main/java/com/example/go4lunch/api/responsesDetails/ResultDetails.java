@@ -1,6 +1,7 @@
 
 package com.example.go4lunch.api.responsesDetails;
 
+import com.example.go4lunch.api.responses.CurrentOpeningHours;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -50,6 +51,14 @@ public class ResultDetails {
         this.name = name;
     }
 
+    public String getPlaceId() {
+        return placeId;
+    }
+
+    public void setPlaceId(String placeId) {
+        this.placeId = placeId;
+    }
+
     public int getRating() {
         return rating;
     }
@@ -65,13 +74,4 @@ public class ResultDetails {
     public void setWebsite(String website) {
         this.website = website;
     }
-
-    public String getPlaceId() {
-        return placeId;
-    }
-
-    public void setPlaceId(String placeId) {
-        this.placeId = placeId;
-    }
-
 }

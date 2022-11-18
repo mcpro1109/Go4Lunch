@@ -1,33 +1,33 @@
 package com.example.go4lunch.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.go4lunch.Model.RestaurantDetails;
 import com.example.go4lunch.Model.Workmate;
 import com.example.go4lunch.R;
-
+import com.example.go4lunch.utils.ContactRestaurant;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class ProfilRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ProfileRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
 
     private ArrayList<Workmate> workmates;
-    private Context context;
+    private ContactRestaurant contactRestaurant;
 
-    public ProfilRestaurantRecyclerViewAdapter(Context context, ArrayList<Workmate> workmates) {
-        this.context = context;
+    public ProfileRestaurantRecyclerViewAdapter(ContactRestaurant contactRestaurant, ArrayList<Workmate> workmates) {
         this.workmates = workmates;
+        this.contactRestaurant = contactRestaurant;
     }
 
     @NonNull
@@ -45,6 +45,7 @@ public class ProfilRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Re
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        //show header and items in the recyclerview
         if (holder instanceof HeaderViewHolder) {
             // setheadersdata_flag = true;
             HeaderViewHolder headerViewHolder = (HeaderViewHolder) holder;
@@ -54,16 +55,29 @@ public class ProfilRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Re
 
                 }
             });
+            headerViewHolder.buttonPhone.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    contactRestaurant.phoneCall();
+                }
+            });
+            headerViewHolder.buttonWeb.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    contactRestaurant.websiteOpen();
+                }
+            });
         } else if (holder instanceof ItemViewHolder) {
-            final ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
-           // final LatestTabModel.ViewItemsModel data = latestlists.get(position-1);
-           itemViewHolder.textWorkmate.setText("new lunch");
+            ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
+            // final LatestTabModel.ViewItemsModel data = latestlists.get(position-1);
+
+            itemViewHolder.textWorkmate.setText("text");
         }
     }
 
     @Override
     public int getItemCount() {
-        return workmates.size()+1;
+        return workmates.size() + 1;
     }
 
     @Override
@@ -72,19 +86,40 @@ public class ProfilRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<Re
             return TYPE_HEADER;
         }
         return TYPE_ITEM;
+    }
 
+    boolean hasPhone = false;
+    boolean isLiked = false;
+    boolean hasWebsite = false;
+    boolean isLoading = true;
+
+    public void updateWithDetails(RestaurantDetails restaurantDetails) {
+        hasPhone = restaurantDetails.getPhoneNumber() != null;
+        hasWebsite = restaurantDetails.getWebsite() != null;
+        isLoading = false;
+        notifyItemChanged(0);
     }
 
     private class HeaderViewHolder extends RecyclerView.ViewHolder {
+
+        public ProgressBar loader;
+
         public Button buttonPhone;
         public Button buttonLike;
         public Button buttonWeb;
 
         public HeaderViewHolder(@NonNull View itemView) {
             super(itemView);
+            loader = itemView.findViewById(R.id.progressBar);
             buttonPhone = itemView.findViewById(R.id.phoneButton);
             buttonLike = itemView.findViewById(R.id.likeButton);
             buttonWeb = itemView.findViewById(R.id.webButton);
+
+            loader.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+
+            buttonLike.setVisibility(!isLoading ? View.VISIBLE : View.GONE);
+            buttonPhone.setVisibility(!isLoading && hasPhone ? View.VISIBLE : View.GONE);
+            buttonWeb.setVisibility(!isLoading && hasWebsite ? View.VISIBLE : View.GONE);
         }
     }
 

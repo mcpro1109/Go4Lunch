@@ -1,18 +1,9 @@
 package com.example.go4lunch.adapter;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.LayerDrawable;
-import android.os.Bundle;
-import android.os.Parcelable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,19 +18,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunch.Model.Restaurant;
 import com.example.go4lunch.R;
-import com.example.go4lunch.RestaurantProfilActivity;
-import com.example.go4lunch.api.responses.RestaurantResponse;
-import com.google.android.libraries.places.api.model.PhotoMetadata;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.net.FetchPhotoRequest;
-import com.google.android.libraries.places.api.net.FetchPlaceRequest;
-import com.google.firebase.database.collection.LLRBNode;
 
-import java.io.Serializable;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class RestaurantListFragmentRecyclerViewAdapter extends RecyclerView.Adapter<RestaurantListFragmentRecyclerViewAdapter.ViewHolder> {
 
@@ -70,7 +50,7 @@ public class RestaurantListFragmentRecyclerViewAdapter extends RecyclerView.Adap
                         "m \n" +
                         description +
                         " \n"
-                        );
+        );
 
         text.setSpan(new StyleSpan(Typeface.BOLD), 0, nameRestaurant.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         String text2 = restaurant.getPeople() + " ";
@@ -79,7 +59,6 @@ public class RestaurantListFragmentRecyclerViewAdapter extends RecyclerView.Adap
         holder.numberWorkmate.setText(text2);
 
         //rating
-       // holder.numberStar.setText("(" + restaurant.getOpinion() + ")");
         holder.ratingBar.setRating((float) restaurant.getOpinion());
 
         //restaurant picture
@@ -119,7 +98,7 @@ public class RestaurantListFragmentRecyclerViewAdapter extends RecyclerView.Adap
             imageRestaurant = itemView.findViewById(R.id.imageRestaurant);
             textRestaurant = itemView.findViewById(R.id.textRestaurant);
             numberWorkmate = itemView.findViewById(R.id.numberWorkmate);
-            ratingBar=itemView.findViewById(R.id.ratingBar);
+            ratingBar = itemView.findViewById(R.id.ratingBar);
         }
     }
 }

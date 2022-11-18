@@ -1,25 +1,21 @@
 package com.example.go4lunch.Fragment;
 
-import androidx.lifecycle.ViewModelProvider;
-
-import android.annotation.SuppressLint;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.go4lunch.Model.Restaurant;
-import com.example.go4lunch.Model.RestaurantDetails;
 import com.example.go4lunch.R;
-import com.example.go4lunch.RestaurantProfilActivity;
+import com.example.go4lunch.RestaurantProfileActivity;
 import com.example.go4lunch.Viewmodel.HomeActivityViewModel;
 import com.example.go4lunch.Viewmodel.RestaurantProfileActivityViewModel;
 import com.example.go4lunch.adapter.RestaurantListFragmentRecyclerViewAdapter;
@@ -33,22 +29,17 @@ public class RestaurantListFragment extends Fragment {
     RestaurantProfileActivityViewModel restaurantProfileActivityViewModel;
 
     ArrayList<Restaurant> restaurants = new ArrayList<>();
-    RestaurantDetails restaurantDetails;
 
     RestaurantListFragmentRecyclerViewAdapter adapter = new RestaurantListFragmentRecyclerViewAdapter(restaurants,
-            new RestaurantListFragmentRecyclerViewAdapter.RestaurantAdapterListener() {
-                @Override
-                public void onClick(Restaurant restaurant) {
-                    RestaurantProfilActivity.navigate(getActivity(), restaurant, restaurantDetails);
-                }
-            });
+            restaurant -> RestaurantProfileActivity.navigate(getActivity(), restaurant));
 
     public static RestaurantListFragment newInstance() {
         return new RestaurantListFragment();
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View result = inflater.inflate(R.layout.fragment_restaurant_list, container, false);
 
@@ -69,19 +60,19 @@ public class RestaurantListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         homeActivityViewModel = new ViewModelProvider(getActivity()).get(HomeActivityViewModel.class);
 
-        restaurantProfileActivityViewModel=new ViewModelProvider(getActivity()).get(RestaurantProfileActivityViewModel.class);
+        restaurantProfileActivityViewModel = new ViewModelProvider(getActivity()).get(RestaurantProfileActivityViewModel.class);
 
         observeList();
 
         homeActivityViewModel.start();
-
-
     }
 
     private void observeList() {
         homeActivityViewModel.getRestaurantData().observe(getViewLifecycleOwner(), restaurants -> {
             adapter.update(restaurants);
         });
-    }
+        restaurantProfileActivityViewModel.getRestaurantData().observe(getViewLifecycleOwner(), restaurantDetails -> {
 
+        });
+    }
 }

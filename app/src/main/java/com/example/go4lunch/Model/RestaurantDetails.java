@@ -1,45 +1,43 @@
 package com.example.go4lunch.Model;
 
 
-import android.location.Location;
-
 import androidx.annotation.Nullable;
 
-import com.example.go4lunch.BuildConfig;
 import com.example.go4lunch.api.responses.CurrentOpeningHours;
-import com.example.go4lunch.api.responses.RestaurantResponse;
-import com.example.go4lunch.api.responses.Result;
 import com.example.go4lunch.api.responsesDetails.ResultDetails;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class RestaurantDetails implements Serializable {
 
-    private String id;
+    private String placeId;
+    @Nullable
     private CurrentOpeningHours hoursOpen;
+    @Nullable
     private String phoneNumber;
+    @Nullable
     private String website;
 
     public RestaurantDetails(
-            String id,
-            CurrentOpeningHours hoursOpen,
-            String phoneNumber,
-            String website) {
-        this.id = id;
+            String placeId,
+            @Nullable CurrentOpeningHours hoursOpen,
+            @Nullable String phoneNumber,
+            @Nullable String website) {
+        this.placeId = placeId;
         this.hoursOpen = hoursOpen;
         this.phoneNumber = phoneNumber;
         this.website = website;
     }
 
-    public String getId() {
-        return id;
+    public String getPlaceId() {
+        return placeId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setPlaceId(String placeId) {
+        this.placeId = placeId;
     }
 
+    @Nullable
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -48,6 +46,7 @@ public class RestaurantDetails implements Serializable {
         this.phoneNumber = phoneNumber;
     }
 
+    @Nullable
     public CurrentOpeningHours getHoursOpen() {
         return hoursOpen;
     }
@@ -56,6 +55,7 @@ public class RestaurantDetails implements Serializable {
         this.hoursOpen = hoursOpen;
     }
 
+    @Nullable
     public String getWebsite() {
         return website;
     }
@@ -63,7 +63,6 @@ public class RestaurantDetails implements Serializable {
     public void setWebsite(String website) {
         this.website = website;
     }
-
 
     public static RestaurantDetails fromGoogleResponseDetails(ResultDetails result) {
 

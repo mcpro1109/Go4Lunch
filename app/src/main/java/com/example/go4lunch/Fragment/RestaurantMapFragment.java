@@ -20,24 +20,17 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.go4lunch.Model.Restaurant;
-import com.example.go4lunch.Model.RestaurantDetails;
 import com.example.go4lunch.R;
-import com.example.go4lunch.RestaurantProfilActivity;
+import com.example.go4lunch.RestaurantProfileActivity;
 import com.example.go4lunch.Viewmodel.HomeActivityViewModel;
 import com.example.go4lunch.Viewmodel.RestaurantMapViewModel;
-import com.example.go4lunch.Viewmodel.RestaurantProfileActivityViewModel;
 import com.example.go4lunch.adapter.CustomWindowInfoAdapter;
-import com.example.go4lunch.adapter.RestaurantListFragmentRecyclerViewAdapter;
-import com.example.go4lunch.api.responsesDetails.ResultDetails;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -45,15 +38,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PointOfInterest;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
-import com.google.android.libraries.places.api.net.PlacesClient;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -69,19 +55,10 @@ public class RestaurantMapFragment extends Fragment implements
     private static final int AUTOCOMPLETE_REQUEST_CODE = 1;
     private RestaurantMapViewModel restaurantMapViewModel;
     HomeActivityViewModel homeActivityViewModel;
-    RestaurantProfileActivityViewModel restaurantProfileActivityViewModel;
-    MapView mapView;
     private GoogleMap map;
-    private PlacesClient PlacesClient;
     private boolean locationPermissionGranted;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-    private Marker marker;
-    private Restaurant restaurant;
-    private ArrayList<Restaurant> restaurantArrayList;
-    private CustomWindowInfoAdapter customWindowInfoAdapter;
-
-
 
     public static RestaurantMapFragment newInstance() {
         return new RestaurantMapFragment();
@@ -119,7 +96,6 @@ public class RestaurantMapFragment extends Fragment implements
         googleMap.setMyLocationEnabled(true);
         googleMap.setOnMyLocationButtonClickListener(this);
         googleMap.setOnMyLocationClickListener(this);
-        // enableMyLocation();
 
         //different options
         GoogleMapOptions googleMapOptions = new GoogleMapOptions();
@@ -144,7 +120,6 @@ public class RestaurantMapFragment extends Fragment implements
         //click on a POI to have the window of information
         map.setOnMapClickListener(RestaurantMapFragment.this);
         map.setOnMarkerClickListener(this);
-        // googleMap.setOnPoiClickListener(this);
 
         try {
             // Customise the styling of the base map using a JSON object defined
@@ -159,45 +134,30 @@ public class RestaurantMapFragment extends Fragment implements
         } catch (Resources.NotFoundException e) {
             Log.e(TAG, "Can't find style. Error: ", e);
         }
-
         //to have the infobulle
         observeList();
         map.setOnInfoWindowClickListener(this);
-
-
     }
 
 
     private void observeList() {
-        homeActivityViewModel.getRestaurantData().observe(getViewLifecycleOwner(), new Observer<ArrayList<Restaurant>>() {
-            @Override
-            public void onChanged(ArrayList<Restaurant> restaurants) {
-                // map.clear();
+        homeActivityViewModel.getRestaurantData().observe(getViewLifecycleOwner(), restaurants -> {
+            for (Restaurant restaurant : restaurants) {
+                CustomWindowInfoAdapter markerInfoWindowAdapter = new CustomWindowInfoAdapter(getContext());
 
-                for (Restaurant restaurant : restaurants) {
-                    CustomWindowInfoAdapter markerInfoWindowAdapter = new CustomWindowInfoAdapter(getContext());
+                map.setInfoWindowAdapter(markerInfoWindowAdapter);
 
-                    map.setInfoWindowAdapter(markerInfoWindowAdapter);
-
-                    String infoRestaurant = restaurant.getAddress() + "\n" + "opinion: " + restaurant.getOpinion();
-                    Marker marker=map.addMarker(
-                            new MarkerOptions()
-                                    .position(new LatLng(restaurant.getLatitude(), restaurant.getLongitude()))
-                                    .title(restaurant.getName())
-
-                                    .snippet(infoRestaurant)
-                    );
-                            marker.setTag(restaurant.getId());
-                            marker.showInfoWindow();
-
-
-                }
-
-
+                String infoRestaurant = restaurant.getAddress() + "\n" + "opinion: " + restaurant.getOpinion();
+                Marker marker = map.addMarker(
+                        new MarkerOptions()
+                                .position(new LatLng(restaurant.getLatitude(), restaurant.getLongitude()))
+                                .title(restaurant.getName())
+                                .snippet(infoRestaurant)
+                );
+                marker.setTag(restaurant.getId());
+                marker.showInfoWindow();
             }
-
         });
-
     }
 
 
@@ -218,26 +178,11 @@ public class RestaurantMapFragment extends Fragment implements
         restaurantMapViewModel = new ViewModelProvider(this).get(RestaurantMapViewModel.class);
         homeActivityViewModel = new ViewModelProvider(getActivity()).get(HomeActivityViewModel.class);
 
-        configureButton();
-        observeView();
 
         getLocationPermission();
 
         homeActivityViewModel.start();
-
-
     }
-
-    private void observeView() {
-
-    }
-
-    private void configureButton() {
-
-    }
-
-
-
 
     private void getLocationPermission() {
         /*
@@ -259,7 +204,6 @@ public class RestaurantMapFragment extends Fragment implements
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
         // Forward results to EasyPermissions
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
@@ -288,11 +232,9 @@ public class RestaurantMapFragment extends Fragment implements
     public boolean onMarkerClick(@NonNull Marker marker) {
         if (marker.getTag() != null) {
             Restaurant restaurant = homeActivityViewModel.getRestaurantByTag(marker.getTag().toString());
-
             if (restaurant != null) {
 
             }
-
             return false;
         }
         return false;
@@ -300,22 +242,16 @@ public class RestaurantMapFragment extends Fragment implements
 
     @Override
     public void onInfoWindowClick(@NonNull Marker marker) {
-
         String title = marker.getTitle();
         Toast.makeText(getActivity(), title, Toast.LENGTH_SHORT).show();
         if (marker.getTag() != null) {
             Restaurant restaurant = homeActivityViewModel.getRestaurantByTag(marker.getTag().toString());
-          //  RestaurantDetails restaurantDetails=restaurantProfileActivityViewModel.getRestaurantData().getValue();
 
             if (restaurant != null) {
-                Intent intent = new Intent(RestaurantMapFragment.this.getActivity(), RestaurantProfilActivity.class);
-                intent.putExtra("restaurant",(Serializable) restaurant);
-              //  intent.putExtra("restaurantDetails", (Serializable) restaurantDetails);
+                Intent intent = new Intent(RestaurantMapFragment.this.getActivity(), RestaurantProfileActivity.class);
+                intent.putExtra("restaurant", (Serializable) restaurant);
                 startActivity(intent);
             }
-
-
         }
-
     }
 }

@@ -1,19 +1,13 @@
 package com.example.go4lunch.Model;
 
-import android.media.Image;
-
-import androidx.annotation.NonNull;
-
-import java.util.Map;
-
 public class Workmate {
 
     private Long id;
     private String name;
     private String firstName;
 
-
-    public Workmate(){}
+    public Workmate() {
+    }
 
     public Workmate(Long id, String name, String firstName) {
         this.id = id;

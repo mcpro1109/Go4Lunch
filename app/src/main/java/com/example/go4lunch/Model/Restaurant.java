@@ -2,18 +2,13 @@ package com.example.go4lunch.Model;
 
 
 import android.location.Location;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 
 import com.example.go4lunch.BuildConfig;
-import com.example.go4lunch.api.responses.CurrentOpeningHours;
-import com.example.go4lunch.api.responses.RestaurantResponse;
 import com.example.go4lunch.api.responses.Result;
-import com.example.go4lunch.api.responsesDetails.ResultDetails;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class Restaurant implements Serializable {
     private String id;
@@ -132,7 +127,6 @@ public class Restaurant implements Serializable {
                 "&key=" +
                 BuildConfig.PLACES_API_KEY;
     }
-
 
     public static Restaurant fromGoogleResponse(Location queryCenter, Result result) {
         Location androidLocation = new Location("");

@@ -1,20 +1,18 @@
 package com.example.go4lunch.Fragment;
 
-import androidx.lifecycle.ViewModelProvider;
-
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.example.go4lunch.Model.Workmate;
 import com.example.go4lunch.R;
@@ -76,7 +74,6 @@ public class WorkmateFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-
     }
 }
 

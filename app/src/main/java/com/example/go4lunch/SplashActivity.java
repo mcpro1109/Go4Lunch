@@ -16,7 +16,7 @@ import java.util.List;
 
 public class SplashActivity extends AppCompatActivity implements FirebaseAuth.AuthStateListener {
 
-    private static final int RC_SIGN_IN=123;
+    private static final int RC_SIGN_IN = 123;
 
     private FirebaseFirestore db;
     List<AuthUI.IdpConfig> providers = Arrays.asList(
@@ -29,7 +29,7 @@ public class SplashActivity extends AppCompatActivity implements FirebaseAuth.Au
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        db= FirebaseFirestore.getInstance();
+        db = FirebaseFirestore.getInstance();
     }
 
     @Override
@@ -44,12 +44,12 @@ public class SplashActivity extends AppCompatActivity implements FirebaseAuth.Au
             finish();
         } else {
             startActivityForResult(AuthUI.getInstance()
-                    .createSignInIntentBuilder()
-                    .setTheme(R.style.Theme_Go4Lunch)
-                    .setAvailableProviders(providers)
-                    .setIsSmartLockEnabled(false, true)
-                    .setLogo(R.drawable.logo_food)
-                    .build(),
+                            .createSignInIntentBuilder()
+                            .setTheme(R.style.Theme_Go4Lunch)
+                            .setAvailableProviders(providers)
+                            .setIsSmartLockEnabled(false, true)
+                            .setLogo(R.drawable.logo_food)
+                            .build(),
                     RC_SIGN_IN);
         }
     }

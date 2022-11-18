@@ -2,15 +2,7 @@ package com.example.go4lunch.utils;
 
 import com.example.go4lunch.api.responses.RestaurantResponse;
 import com.example.go4lunch.api.responsesDetails.RestaurantResponseDetails;
-import com.firebase.ui.auth.data.model.PhoneNumber;
-import com.google.android.libraries.places.api.model.Place;
 
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -23,7 +15,6 @@ public interface PlacesAPI {
      */
     @GET("api/place/nearbysearch/json")
     Call<RestaurantResponse> getNearbyPlaces(
-
             @Query("radius") int radius,
             @Query("location") String location,
             @Query("type") String type,

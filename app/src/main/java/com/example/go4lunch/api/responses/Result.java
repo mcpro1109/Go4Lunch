@@ -1,14 +1,11 @@
 
 package com.example.go4lunch.api.responses;
 
-import android.location.Location;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.Arrays;
 import java.util.List;
-
-import com.google.android.libraries.places.api.model.Place;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 public class Result {
 
@@ -212,19 +209,28 @@ public class Result {
         this.formattedPhoneNumber = formattedPhoneNumber;
     }
 
-    List<Place.Field> fields= Arrays.asList(Place.Field.PHONE_NUMBER);
-    final CharSequence phoneNumber=Place.builder().getPhoneNumber();
-
-    public String getPhoneNumber(){
-        return (String) phoneNumber;
-    }
-
     public String getInternationalPhoneNumber() {
         return internationalPhoneNumber;
     }
 
     public void setInternationalPhoneNumber(String internationalPhoneNumber) {
         this.internationalPhoneNumber = internationalPhoneNumber;
+    }
+
+    public CurrentOpeningHours getCurrentOpeningHours() {
+        return currentOpeningHours;
+    }
+
+    public void setCurrentOpeningHours(CurrentOpeningHours currentOpeningHours) {
+        this.currentOpeningHours = currentOpeningHours;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
     }
 
     public String getUrl() {
@@ -235,20 +241,4 @@ public class Result {
         this.url = url;
     }
 
-    public CurrentOpeningHours getCurrentOpeningHours() {
-        return currentOpeningHours;
-    }
-
-    public void setCurrentOpeningHours(CurrentOpeningHours currentOpeningHours) {
-        this.currentOpeningHours = currentOpeningHours;
-    }
-    public String getWebsite() {
-        return website;
-    }
-
-    public void setWebsite(String website) {
-        this.website = website;
-    }
-
-    private final float[] distanceResults = new float[3];
 }
