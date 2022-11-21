@@ -8,6 +8,9 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +29,8 @@ import com.example.go4lunch.Model.Restaurant;
 import com.example.go4lunch.Viewmodel.RestaurantProfileActivityViewModel;
 import com.example.go4lunch.adapter.ProfileRestaurantRecyclerViewAdapter;
 import com.example.go4lunch.utils.ContactRestaurant;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -42,7 +47,11 @@ public class RestaurantProfileActivity extends AppCompatActivity implements Cont
     private TextView descriptionRestaurant;
     private FloatingActionButton addWorkmateFab;
     private Toolbar toolbarProfile;
+    private CollapsingToolbarLayout collapsingToolbarLayout;
     private RecyclerView recyclerView;
+    private AppBarLayout appBarLayout;
+    private boolean appBarExpanded = true;
+    private Menu collapseMenu;
 
     private RestaurantProfileActivityViewModel restaurantProfileActivityViewModel;
     private ProfileRestaurantRecyclerViewAdapter adapter;
@@ -56,7 +65,9 @@ public class RestaurantProfileActivity extends AppCompatActivity implements Cont
         descriptionRestaurant = findViewById(R.id.descriptionRestaurant);
         addWorkmateFab = findViewById(R.id.addworkmateRestaurant);
         toolbarProfile = findViewById(R.id.toolbarProfil);
+        collapsingToolbarLayout=findViewById(R.id.collapsing_toolbar);
         recyclerView = findViewById(R.id.restaurantProfileRecyclerview);
+        appBarLayout=findViewById(R.id.app_bar_layout);
 
         //back with toolbar
         setSupportActionBar(toolbarProfile);
@@ -72,6 +83,9 @@ public class RestaurantProfileActivity extends AppCompatActivity implements Cont
         restaurantProfileActivityViewModel = new ViewModelProvider(this).get(RestaurantProfileActivityViewModel.class);
         restaurantProfileActivityViewModel.getDetailsWithPlaceId(restaurant.getId());
         observeDetails();
+        collapsingToolbarLayout.setTitle(restaurant.getName());
+
+        appBarMenuShow();
 
     }
 
@@ -129,5 +143,37 @@ public class RestaurantProfileActivity extends AppCompatActivity implements Cont
         } else {
             Toast.makeText(RestaurantProfileActivity.this, "no website", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void appBarMenuShow() {
+        appBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
+            //  Vertical offset == 0 indicates appBar is fully expanded.
+            if (Math.abs(verticalOffset) > 680) {
+                appBarExpanded = false;
+                invalidateOptionsMenu();
+            } else {
+                appBarExpanded = true;
+                invalidateOptionsMenu();
+            }
+        });
+    }
+
+    @Override
+    public boolean onPrepareOptionMenu(Menu menu){
+        if (collapseMenu!=null && (!appBarExpanded || collapseMenu.size() !=1)){
+collapseMenu.add("Add").setIcon(R.drawable.ic_baseline_add_24)
+        .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        }else{
+
+        }
+        return super.onPrepareOptionsMenu(collapseMenu);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        collapseMenu = menu;
+            onPrepareOptionMenu(menu);
+        return true;
     }
 }

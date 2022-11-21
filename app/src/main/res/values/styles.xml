@@ -7,4 +7,8 @@
     <style name="App.ToolbarStyle" parent="@style/Widget.Material3.Toolbar">
         <item name="navigationIconTint">@android:color/white</item>
     </style>
+    <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <!-- Customize color of navigation drawer icon and back arrow -->
+        <item name="colorControlNormal">@color/white</item>
+    </style>
 </resources>
