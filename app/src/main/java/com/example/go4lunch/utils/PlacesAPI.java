@@ -1,5 +1,6 @@
 package com.example.go4lunch.utils;
 
+import com.example.go4lunch.Model.Restaurant;
 import com.example.go4lunch.api.responses.RestaurantResponse;
 import com.example.go4lunch.api.responsesDetails.RestaurantResponseDetails;
 
@@ -25,6 +26,13 @@ public interface PlacesAPI {
     Call<RestaurantResponseDetails> getDetailsPlaces(
             @Query("place_id") String place_id,
             @Query("fields") String fields,
+            @Query("key") String key
+    );
+
+    @GET("api/place/autocomplete/json")
+    Call<Restaurant>getSearchRestaurant(
+            @Query("input") String input,
+            @Query("radius") int radius,
             @Query("key") String key
     );
 }

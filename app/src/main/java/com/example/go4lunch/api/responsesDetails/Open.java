@@ -5,6 +5,9 @@ package com.example.go4lunch.api.responsesDetails;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.time.Period;
+import java.util.List;
+
 
 public class Open {
 

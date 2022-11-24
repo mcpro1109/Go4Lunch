@@ -3,14 +3,17 @@ package com.example.go4lunch;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -21,11 +24,27 @@ import com.example.go4lunch.Fragment.RestaurantListFragment;
 import com.example.go4lunch.Fragment.RestaurantMapFragment;
 import com.example.go4lunch.Fragment.WorkmateFragment;
 import com.example.go4lunch.Viewmodel.WorkmateViewModel;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.PlaceTypes;
+import com.google.android.libraries.places.api.model.RectangularBounds;
+import com.google.android.libraries.places.api.model.TypeFilter;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class HomeActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener, NavigationView.OnNavigationItemSelectedListener {
 
@@ -37,8 +56,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationBarView
     private TextView nameWorkmateLog;
     private TextView mailWorkmateLog;
     private WorkmateViewModel workmateViewModel;
-    private static int AUTOCOMPLETE_CODE = 1;
     private GoogleMap map;
+
+    private static int AUTOCOMPLETE_CODE = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,13 +79,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationBarView
         configureDrawerLayout();
         configureNavigationView();
         //configureAvatarWorkmate();
-        // configureSearchBar();
-    }
-
-    private void configureSearchBar() {
-
 
     }
+
 
     private void configureNameWorkmate() {
         String name = TextUtils.isEmpty(workmateViewModel.getCurrentUser().getDisplayName()) ?
@@ -148,7 +165,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationBarView
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, workmateFragment).commit();
                 return true;
 
-            //navigation in the navigationView
+                //navigation in the navigationView
             case R.id.yourLunchMenu:
                 break;
             case R.id.settingsMenu:
@@ -160,6 +177,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationBarView
         }
         this.menuLeft.closeDrawer(GravityCompat.START);
         return super.onOptionsItemSelected(item);
+    }
+
+    private void onSearchCalled() {
+        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
+        Intent intent = new Autocomplete
+                .IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
+                .setCountry("FR")
+                .setLocationRestriction(RectangularBounds.newInstance(new LatLng(48.869717, 2.331679), new LatLng(48.866667, 2.333333)))
+                .setTypesFilter(Collections.singletonList(PlaceTypes.RESTAURANT))
+                .build(this);
+        startActivityForResult(intent, AUTOCOMPLETE_CODE);
     }
 
     private void logout() {
@@ -175,4 +203,40 @@ public class HomeActivity extends AppCompatActivity implements NavigationBarView
         super.onPointerCaptureChanged(hasCapture);
     }
 
+   @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search_menu, menu);
+        MenuItem menuItem = menu.findItem(R.id.actionSearch);
+        SearchView searchView = (SearchView) menuItem.getActionView();
+        searchView.setQueryHint("Type here to search");
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                onSearchCalled();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == AUTOCOMPLETE_CODE) {
+            if (resultCode == RESULT_OK) {
+                Place place = Autocomplete.getPlaceFromIntent(data);
+
+            }else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                Status status = Autocomplete.getStatusFromIntent(data);
+                Toast.makeText(getApplicationContext(), status.getStatusMessage(),Toast.LENGTH_SHORT).show();
+            }else if (resultCode == RESULT_CANCELED) {}
+        }
+    }
 }

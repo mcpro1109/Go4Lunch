@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunch.Model.Restaurant;
+import com.example.go4lunch.Model.RestaurantDetails;
 import com.example.go4lunch.R;
 
 import java.util.ArrayList;
@@ -68,6 +69,7 @@ public class RestaurantListFragmentRecyclerViewAdapter extends RecyclerView.Adap
                 .apply(RequestOptions.centerCropTransform())
                 .placeholder(R.drawable.logo_food)
                 .into(holder.imageRestaurant);
+
 
         //click on a restaurant to view profil
         holder.itemView.setOnClickListener(view -> listener.onClick(restaurant));
