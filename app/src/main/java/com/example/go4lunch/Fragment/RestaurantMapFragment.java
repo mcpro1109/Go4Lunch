@@ -243,7 +243,7 @@ public class RestaurantMapFragment extends Fragment implements
     @Override
     public void onInfoWindowClick(@NonNull Marker marker) {
         String title = marker.getTitle();
-        Toast.makeText(getActivity(), title, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity(), title, Toast.LENGTH_SHORT).show();
         if (marker.getTag() != null) {
             Restaurant restaurant = homeActivityViewModel.getRestaurantByTag(marker.getTag().toString());
 

@@ -9,6 +9,8 @@ import com.example.go4lunch.Model.Restaurant;
 import com.example.go4lunch.Repository.RestaurantRepository;
 import com.example.go4lunch.utils.LocationBuilder;
 import com.example.go4lunch.utils.OnResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
@@ -44,5 +46,9 @@ public class HomeActivityViewModel extends ViewModel {
             if (restaurant.getId().equals(tag)) return restaurant;
         }
         return null;
+    }
+
+    public FirebaseUser getCurrentUser() {
+        return FirebaseAuth.getInstance().getCurrentUser();
     }
 }

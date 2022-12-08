@@ -32,6 +32,7 @@ public class ProfileRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<R
     private ArrayList<Workmate> workmates;
     private ContactRestaurant contactRestaurant;
 
+
     public ProfileRestaurantRecyclerViewAdapter(ContactRestaurant contactRestaurant, ArrayList<Workmate> workmates) {
         this.workmates = workmates;
         this.contactRestaurant = contactRestaurant;
@@ -59,12 +60,10 @@ public class ProfileRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<R
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         //show header and items in the recyclerview
         if (holder instanceof HeaderViewHolder) {
-            // setheadersdata_flag = true;
             HeaderViewHolder headerViewHolder = (HeaderViewHolder) holder;
             headerViewHolder.buttonLike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                 }
             });
             headerViewHolder.buttonPhone.setOnClickListener(new View.OnClickListener() {
@@ -81,17 +80,20 @@ public class ProfileRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<R
             });
         } else if (holder instanceof ItemViewHolder) {
             ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
-            Workmate workmate = workmates.get(position);
-            // final LatestTabModel.ViewItemsModel data = latestlists.get(position-1);
+            Workmate workmate = workmates.get(position - 1);
 
 
-            itemViewHolder.textWorkmate.setText("workmates eat here");
+            //  itemViewHolder.textWorkmate.setText("workmates eat here");
+            String name = workmate.getFirstName();
+            itemViewHolder.textWorkmate.setText(name);
+
             Glide.with(itemViewHolder.avatarWorkmate)
                     .load("https://ui-avatars.com/api/?name=" + workmate.getFirstName() + "&background=random")
                     .apply(RequestOptions.circleCropTransform())
                     .into(itemViewHolder.avatarWorkmate);
         }
     }
+
 
     @Override
     public int getItemCount() {
@@ -105,6 +107,7 @@ public class ProfileRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<R
         }
         return TYPE_ITEM;
     }
+
 
     public void updateWithDetails(RestaurantDetails restaurantDetails) {
         hasPhone = restaurantDetails.getPhoneNumber() != null;
@@ -143,7 +146,7 @@ public class ProfileRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<R
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
             textWorkmate = itemView.findViewById(R.id.workmatesAddRestaurant);
-            avatarWorkmate= itemView.findViewById(R.id.avatarWorkmateAddRestaurant);
+            avatarWorkmate = itemView.findViewById(R.id.avatarWorkmateAddRestaurant);
         }
     }
 }

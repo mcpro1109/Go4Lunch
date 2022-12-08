@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:orientation="vertical"
-    android:background="@color/red">
+    android:background="@color/red"
+    android:paddingBottom="32dp">
 
     <TextView
         android:id="@+id/textTitleMenu"
@@ -16,24 +15,22 @@
         android:textColor="@color/white"
         android:textSize="32dp"
         android:textStyle="bold"
-
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
     </TextView>
 
+
     <ImageView
         android:id="@+id/avatarMenu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="24dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+android:layout_marginLeft="16dp"
         android:src="@drawable/ic_baseline_fastfood_24"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textTitleMenu"
-        >
+        app:layout_constraintTop_toBottomOf="@+id/textTitleMenu">
 
     </ImageView>
 
@@ -41,30 +38,28 @@
         android:id="@+id/namePseudoMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
         android:text="name"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/mailPseudoMenu"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/avatarMenu"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="50dp"
-        >
+        app:layout_constraintStart_toEndOf="@id/avatarMenu"
+        app:layout_constraintTop_toTopOf="parent">
 
     </TextView>
-
 
     <TextView
         android:id="@+id/mailPseudoMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginEnd="16dp"
         android:text="mail"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/namePseudoMenu"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="50dp"
-       >
+        app:layout_constraintStart_toEndOf="@id/avatarMenu">
 
     </TextView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,11 +16,9 @@ import java.util.ArrayList;
 public class WorkmateViewModel extends ViewModel {
 
     private WorkmateRepository workmateRepository = WorkmateRepository.getInstance();
-    private MutableLiveData<ArrayList<Workmate>> workmateList = new MutableLiveData<>();
 
-    public LiveData<ArrayList<Workmate>> getWorkmatesData() {
-        return workmateList;
-    }
+    private MutableLiveData<ArrayList<Workmate>> workmateList = new MutableLiveData<>();
+    public LiveData<ArrayList<Workmate>> getWorkmatesData() {return workmateList;}
 
     public void loadWorkmates() {
         workmateRepository.loadWorkmates(new OnResult<ArrayList<Workmate>>() {

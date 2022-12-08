@@ -4,14 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RestaurantProfileActivity">
+    tools:context=".RestaurantProfileActivity"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+   >
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+       >
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
@@ -26,10 +30,9 @@
             <ImageView
                 android:id="@+id/imageProfilRestaurant"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_marginTop="36dp"
-                android:fitsSystemWindows="true"
+                android:fitsSystemWindows="false"
                 android:scaleType="centerCrop"
                 android:src="@drawable/workersblur"
                 app:layout_collapseMode="parallax">
@@ -43,7 +46,9 @@
                 android:background="@color/red"
                 android:theme="@style/ToolbarTheme"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/App.ToolbarStyle" />
+                app:popupTheme="@style/App.ToolbarStyle"
+                android:fitsSystemWindows="true"
+                />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -52,12 +57,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/red"
-            android:paddingLeft="8dp"
+            android:paddingLeft="16dp"
+            android:paddingTop="16dp"
             android:paddingRight="80dp"
-            android:paddingBottom="12dp"
+            android:paddingBottom="16dp"
             android:text="restaurant"
-            android:textColor="@color/white"
-            />
+            android:textColor="@color/white" />
 
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -67,8 +72,6 @@
         android:id="@+id/restaurantProfileRecyclerview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:scrollbars="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:listitem="@layout/activity_listview_item"
         />

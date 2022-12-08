@@ -1,10 +1,15 @@
 package com.example.go4lunch;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,14 +20,20 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunch.Fragment.RestaurantListFragment;
 import com.example.go4lunch.Fragment.RestaurantMapFragment;
 import com.example.go4lunch.Fragment.WorkmateFragment;
+import com.example.go4lunch.Viewmodel.HomeActivityViewModel;
 import com.example.go4lunch.Viewmodel.WorkmateViewModel;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.GoogleMap;
@@ -55,8 +66,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationBarView
     private ImageView avatarLoginMenu;
     private TextView nameWorkmateLog;
     private TextView mailWorkmateLog;
-    private WorkmateViewModel workmateViewModel;
-    private GoogleMap map;
+    private HomeActivityViewModel homeActivityViewModel;
 
     private static int AUTOCOMPLETE_CODE = 1;
 
@@ -66,56 +76,53 @@ public class HomeActivity extends AppCompatActivity implements NavigationBarView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+
         toolbar = findViewById(R.id.toolbarmenu);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         menuLeft = findViewById(R.id.drawerLayout);
         navigationView = findViewById(R.id.navigationView);
-        avatarLoginMenu = findViewById(R.id.avatarMenu);
-        nameWorkmateLog = findViewById(R.id.namePseudoMenu);
-        mailWorkmateLog = findViewById(R.id.mailPseudoMenu);
+        avatarLoginMenu =navigationView.getHeaderView(0).findViewById(R.id.avatarMenu);
+        nameWorkmateLog = navigationView.getHeaderView(0).findViewById(R.id.namePseudoMenu);
+        mailWorkmateLog =  navigationView.getHeaderView(0).findViewById(R.id.mailPseudoMenu);
 
         setSupportActionBar(toolbar);
+        homeActivityViewModel = new ViewModelProvider(this).get(HomeActivityViewModel.class);
+
+        //transparent toolbar
+        Window window = getWindow();
+        // Enable status bar translucency (requires API 19)
+        window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        // Disable status bar translucency (requires API 19)
+        window.getAttributes().flags &= (~WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        // Set a color (requires API 21)
+        menuLeft.setStatusBarBackground(R.color.red);
+        window.setStatusBarColor(Color.TRANSPARENT);
 
         configureDrawerLayout();
         configureNavigationView();
-        //configureAvatarWorkmate();
+        configureAvatarWorkmate();
 
     }
 
 
     private void configureNameWorkmate() {
-        String name = TextUtils.isEmpty(workmateViewModel.getCurrentUser().getDisplayName()) ?
-                getString(R.string.no_username_found) : workmateViewModel.getCurrentUser().getDisplayName();
+        String name = TextUtils.isEmpty(homeActivityViewModel.getCurrentUser().getDisplayName()) ?
+                getString(R.string.no_username_found) : homeActivityViewModel.getCurrentUser().getDisplayName();
         nameWorkmateLog.setText(name);
 
-        String mail = TextUtils.isEmpty(workmateViewModel.getCurrentUser().getEmail()) ?
-                getString(R.string.no_usermail_found) : workmateViewModel.getCurrentUser().getEmail();
+        String mail = TextUtils.isEmpty(homeActivityViewModel.getCurrentUser().getEmail()) ?
+                getString(R.string.no_usermail_found) : homeActivityViewModel.getCurrentUser().getEmail();
         mailWorkmateLog.setText(mail);
     }
 
-    // à voir null objet
     private void configureAvatarWorkmate() {
-      /*  if (workmateViewModel.isCurrentWorkmateLogin()) {
-            FirebaseUser firebaseUser = workmateViewModel.getCurrentUser();
-            configureNameWorkmate(firebaseUser);
-            if (firebaseUser.getPhotoUrl() != null) {
-                Glide.with(this)
-                        .load("https://ui-avatars.com/api/?name=" + firebaseUser.getPhotoUrl() + "&background=random")
-                        .apply(RequestOptions.circleCropTransform())
-                        .into(avatarLoginMenu);
-            } else {
-                Glide.with(this)
-                        .load("https://ui-avatars.com/api/?name=Ma&background=random")
-                        .apply(RequestOptions.circleCropTransform())
-                        .into(avatarLoginMenu);
-            }
-        }*/
-        if (workmateViewModel.getCurrentWorkmate() != null) {
+        if (homeActivityViewModel.getCurrentUser() != null) {
             configureNameWorkmate();
 
-            if (workmateViewModel.getCurrentWorkmate().getPhotoUrl() != null) {
+            if (homeActivityViewModel.getCurrentUser().getPhotoUrl() != null) {
                 Glide.with(this)
-                        .load("https://ui-avatars.com/api/?name=" + workmateViewModel.getCurrentWorkmate().getPhotoUrl() + "&background=random")
+                        .load(homeActivityViewModel.getCurrentUser().getPhotoUrl())
                         .apply(RequestOptions.circleCropTransform())
                         .into(avatarLoginMenu);
             } else {
@@ -239,4 +246,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationBarView
             }else if (resultCode == RESULT_CANCELED) {}
         }
     }
+
+
 }
