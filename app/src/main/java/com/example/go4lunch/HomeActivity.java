@@ -1,5 +1,6 @@
 package com.example.go4lunch;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -70,7 +71,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationBarView
 
     private static int AUTOCOMPLETE_CODE = 1;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,20 +88,20 @@ public class HomeActivity extends AppCompatActivity implements NavigationBarView
         setSupportActionBar(toolbar);
         homeActivityViewModel = new ViewModelProvider(this).get(HomeActivityViewModel.class);
 
-        //transparent toolbar
-        Window window = getWindow();
-        // Enable status bar translucency (requires API 19)
-        window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
-                WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        // Disable status bar translucency (requires API 19)
-        window.getAttributes().flags &= (~WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        // Set a color (requires API 21)
-        menuLeft.setStatusBarBackground(R.color.red);
-        window.setStatusBarColor(Color.TRANSPARENT);
-
         configureDrawerLayout();
         configureNavigationView();
         configureAvatarWorkmate();
+
+        Window window = getWindow();
+// Enable status bar translucency (requires API 19)
+        window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+// Disable status bar translucency (requires API 19)
+        window.getAttributes().flags &= (~WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+// Set a color (requires API 21)
+        window.setStatusBarColor(Color.TRANSPARENT);
+
+
 
     }
 

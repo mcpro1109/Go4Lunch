@@ -28,8 +28,7 @@ public class WorkmateViewModel extends ViewModel {
             }
 
             @Override
-            public void onFailure() {
-            }
+            public void onFailure() {}
         });
     }
 

@@ -1,62 +1,62 @@
 package com.example.go4lunch.Viewmodel;
 
-import android.content.res.ColorStateList;
 import android.os.Handler;
 import android.util.Log;
 
 import androidx.arch.core.util.Function;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
+import com.example.go4lunch.Model.Restaurant;
 import com.example.go4lunch.Model.RestaurantDetails;
 import com.example.go4lunch.Model.Workmate;
 import com.example.go4lunch.R;
 import com.example.go4lunch.Repository.RestaurantRepository;
 import com.example.go4lunch.Repository.WorkmateRepository;
-import com.example.go4lunch.RestaurantProfileActivity;
 import com.example.go4lunch.utils.OnResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class RestaurantProfileActivityViewModel extends ViewModel {
 
+    public Boolean isEating=false;
+
     private RestaurantRepository restaurantRepository = RestaurantRepository.getInstance();
     private WorkmateRepository workmateRepository=WorkmateRepository.getInstance();
+
+    private MutableLiveData<Restaurant> restaurant = new MutableLiveData<>();
+    public LiveData<Restaurant> getRestaurant() {
+        return restaurant;
+    }
 
     private MutableLiveData<RestaurantDetails> restaurantDetail = new MutableLiveData<>();
     public LiveData<RestaurantDetails> getRestaurantData() {
         return restaurantDetail;
     }
 
-    private MutableLiveData<ArrayList<Workmate>> workmate = new MutableLiveData<>(new ArrayList<>());
-    public LiveData<ArrayList<Workmate>> getWorkmateData() {return workmate;}
-    private MutableLiveData<Workmate> workmateEating = new MutableLiveData(new ArrayList());
+    private MutableLiveData<ArrayList<Workmate>> workmates = new MutableLiveData<>(new ArrayList<>());
+    public LiveData<ArrayList<Workmate>> getWorkmateData() {return workmates;}
 
-    public LiveData<Integer> fabBackground= Transformations.map(workmate, new Function<ArrayList<Workmate>, Integer>() {
-        @Override
-        public Integer apply(ArrayList<Workmate> input) {
+    public LiveData<Integer> fabBackground = Transformations.map(workmates, input -> {
+        Log.e("couleur", String.valueOf(isEating));
+        if(!isEating){
+            return R.color.blue;
+        }
+        else {
             return R.color.red;
         }
     });
-
 
     public void getDetailsWithPlaceId(String placeId) {
         restaurantRepository.getDetails(placeId, new OnResult<RestaurantDetails>() {
             @Override
             public void onSuccess(RestaurantDetails data) {
                 final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        restaurantDetail.setValue(data);
-                    }
-                }, 3000);
+                handler.postDelayed(() -> restaurantDetail.setValue(data), 3000);
             }
 
             @Override
@@ -71,58 +71,49 @@ public class RestaurantProfileActivityViewModel extends ViewModel {
     }
 
     public void toggleEat() {
-        OnResult<Void> onResult=new OnResult<Void>() {
+        OnResult<Void> onResult = new OnResult<Void>() {
             @Override
             public void onSuccess(Void data) {
-                //mettre à jour liste des workmates qui mangent
-                loadWorkmates();
-
+                reloadWorkmates();
             }
-
             @Override
-            public void onFailure() {
-
-            }
+            public void onFailure() {}
         };
-       if (isEating()){
-           workmateRepository.removeEating(onResult);
-
+       if (isEating){
+           workmateRepository.removeEating(getCurrentUser().getUid(), onResult);
+           isEating=false;
        }else{
-           workmateRepository.addEating(onResult);
-
+           workmateRepository.addEating(getCurrentUser().getUid(), restaurant.getValue().getId(), onResult);
+           isEating=true;
        }
     }
 
-    private boolean isEating(){
-
-        boolean result=false;
-        for (Workmate w: workmate.getValue()){
-            if (getCurrentUser().getDisplayName().equals(w.getName())){
-                result=true;
+   /* private boolean isEating(){
+        boolean result = false;
+        for (Workmate w: workmates.getValue()){
+           // if (getCurrentUser().getDisplayName().equals(w.getName())){
+            if (w!=null){
+                result = true;
             }
         }
-
         return result;
-    }
+    }*/
 
-    public void loadWorkmates(){
-        //maj livedata avec les workmates qui mangent
-        workmateRepository.createWorkmate();
-
-    }
-
-   /* private void isWorkmateEatHere() {
-
-        if (!isWorkmateEatHere) {
-            addWorkmateFab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(RestaurantProfileActivity.this, R.color.green)));
-            if (restaurantProfileActivityViewModel.getCurrentUser() != null) {
-                configureName();
+    public void reloadWorkmates(){
+        workmateRepository.loadWorkmatesForRestaurant(restaurant.getValue(), new OnResult<ArrayList<Workmate>>() {
+            @Override
+            public void onSuccess(ArrayList<Workmate> data) {
+                workmates.postValue(data);
             }
 
-            isWorkmateEatHere = true;
-        } else {
-            addWorkmateFab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(RestaurantProfileActivity.this, R.color.blue)));
-            isWorkmateEatHere = false;
-        }
-    }*/
+            @Override
+            public void onFailure() {}
+        });
+    }
+
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant.setValue(restaurant);
+        getDetailsWithPlaceId(restaurant.getId());
+        reloadWorkmates();
+    }
 }

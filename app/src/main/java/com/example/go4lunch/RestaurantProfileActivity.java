@@ -5,7 +5,6 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,8 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,9 +27,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunch.Model.Restaurant;
-import com.example.go4lunch.Model.Workmate;
 import com.example.go4lunch.Viewmodel.RestaurantProfileActivityViewModel;
-import com.example.go4lunch.Viewmodel.WorkmateViewModel;
 import com.example.go4lunch.adapter.ProfileRestaurantRecyclerViewAdapter;
 import com.example.go4lunch.utils.ContactRestaurant;
 import com.google.android.material.appbar.AppBarLayout;
@@ -58,11 +54,9 @@ public class RestaurantProfileActivity extends AppCompatActivity implements Cont
     private boolean appBarExpanded = true;
     private Menu collapseMenu;
     private TextView nameWorkmate;
-    MutableLiveData<Workmate> workmate = new MutableLiveData(new ArrayList());
 
     private RestaurantProfileActivityViewModel restaurantProfileActivityViewModel;
     private ProfileRestaurantRecyclerViewAdapter adapter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +81,7 @@ public class RestaurantProfileActivity extends AppCompatActivity implements Cont
 
         Window window = getWindow();
 // Enable status bar translucency (requires API 19)
-        window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS  ,
+        window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
                 WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 // Disable status bar translucency (requires API 19)
         window.getAttributes().flags &= (~WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -95,61 +89,51 @@ public class RestaurantProfileActivity extends AppCompatActivity implements Cont
 
         window.setStatusBarColor(Color.TRANSPARENT);
 
-        //insertion of the values restaurant
-        Restaurant restaurant = (Restaurant) getIntent().getSerializableExtra("restaurant");
-        updateRestaurantInformation();
-
         restaurantProfileActivityViewModel = new ViewModelProvider(this).get(RestaurantProfileActivityViewModel.class);
-        //workmateViewModel = new ViewModelProvider(this).get(WorkmateViewModel.class);
-        restaurantProfileActivityViewModel.getDetailsWithPlaceId(restaurant.getId());
+        restaurantProfileActivityViewModel.setRestaurant((Restaurant) getIntent().getSerializableExtra("restaurant"));
+        restaurantProfileActivityViewModel.getRestaurant().observe(this, new Observer<Restaurant>() {
+            @Override
+            public void onChanged(Restaurant restaurant) {
+                updateRestaurantInformation(restaurant);
+                collapsingToolbarLayout.setTitle(restaurant.getName());
+            }
+        });
 
         observeDetails();
-        collapsingToolbarLayout.setTitle(restaurant.getName());
-
         appBarMenuShow();
 
-
-        addWorkmateFab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(RestaurantProfileActivity.this, R.color.blue)));
         addWorkmateFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // try {
-                    restaurantProfileActivityViewModel.toggleEat();
-                    configureWorkmateEating();
-                Toast.makeText(RestaurantProfileActivity.this,"bouton",Toast.LENGTH_SHORT).show();
-              //  }catch (Exception e){
-                //    Toast.makeText(RestaurantProfileActivity.this,e.getMessage(),Toast.LENGTH_SHORT).show();
-                }
-
-           // }
+                restaurantProfileActivityViewModel.toggleEat();
+                configureWorkmateEating();
+            }
         });
     }
 
     private void configureWorkmateEating() {
         restaurantProfileActivityViewModel.getWorkmateData().observe(this, workmate -> {
-            if (workmate != null) {
+            if (restaurantProfileActivityViewModel.isEating) {
                 adapter.update(workmate);
             } else {
-                Toast.makeText(RestaurantProfileActivity.this, "no workmate want to eat", Toast.LENGTH_SHORT).show();
+
+               // adapter.removeWorkmateEating();
+               // Toast.makeText(RestaurantProfileActivity.this, "no workmate want to eat", Toast.LENGTH_SHORT).show();
             }
         });
-        restaurantProfileActivityViewModel.fabBackground.observe(this, isEating ->{
 
-
-
+        restaurantProfileActivityViewModel.fabBackground.observe(this, color -> {
+            addWorkmateFab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(RestaurantProfileActivity.this, color)));
         });
     }
 
-
-    private void updateRestaurantInformation() {
-        Restaurant restaurant = (Restaurant) getIntent().getSerializableExtra("restaurant");
+    private void updateRestaurantInformation(Restaurant restaurant) {
         Glide
                 .with(imageRestaurant)
                 .load(restaurant.getImageURL(400))
                 .apply(RequestOptions.centerCropTransform())
                 .placeholder(R.drawable.logo_food)
                 .into(imageRestaurant);
-
 
         String description = restaurant.getType() + " " + restaurant.getAddress();
         descriptionRestaurant.setText(description);
@@ -160,8 +144,6 @@ public class RestaurantProfileActivity extends AppCompatActivity implements Cont
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(adapter);
-
-
     }
 
     public void observeDetails() {
@@ -170,7 +152,6 @@ public class RestaurantProfileActivity extends AppCompatActivity implements Cont
                 adapter.updateWithDetails(restaurantDetails);
             }
         });
-
     }
 
     @Override
@@ -199,7 +180,7 @@ public class RestaurantProfileActivity extends AppCompatActivity implements Cont
     private void appBarMenuShow() {
         appBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
             //  Vertical offset == 0 indicates appBar is fully expanded.
-            if (Math.abs(verticalOffset) >600) {
+            if (Math.abs(verticalOffset) > 600) {
                 appBarExpanded = false;
                 invalidateOptionsMenu();
             } else {
