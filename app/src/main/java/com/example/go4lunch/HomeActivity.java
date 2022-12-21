@@ -99,7 +99,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationBarView
 // Disable status bar translucency (requires API 19)
         window.getAttributes().flags &= (~WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 // Set a color (requires API 21)
-        window.setStatusBarColor(Color.TRANSPARENT);
+        window.setStatusBarColor(Color.parseColor("#fb5607"));
 
 
 

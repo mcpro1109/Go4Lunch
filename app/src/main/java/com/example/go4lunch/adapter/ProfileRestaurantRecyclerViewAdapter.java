@@ -43,11 +43,6 @@ public class ProfileRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<R
         notifyDataSetChanged();
     }
 
-    public void removeWorkmateEating(int position){
-        notifyItemRemoved(position);
-        notifyItemRangeChanged(position, workmates.size());
-    }
-
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

@@ -79,16 +79,6 @@ public class RestaurantProfileActivity extends AppCompatActivity implements Cont
 
         configureRecyclerview();
 
-        Window window = getWindow();
-// Enable status bar translucency (requires API 19)
-        window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
-                WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-// Disable status bar translucency (requires API 19)
-        window.getAttributes().flags &= (~WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-// Set a color (requires API 21)
-
-        window.setStatusBarColor(Color.TRANSPARENT);
-
         restaurantProfileActivityViewModel = new ViewModelProvider(this).get(RestaurantProfileActivityViewModel.class);
         restaurantProfileActivityViewModel.setRestaurant((Restaurant) getIntent().getSerializableExtra("restaurant"));
         restaurantProfileActivityViewModel.getRestaurant().observe(this, new Observer<Restaurant>() {
@@ -113,13 +103,7 @@ public class RestaurantProfileActivity extends AppCompatActivity implements Cont
 
     private void configureWorkmateEating() {
         restaurantProfileActivityViewModel.getWorkmateData().observe(this, workmate -> {
-            if (restaurantProfileActivityViewModel.isEating) {
                 adapter.update(workmate);
-            } else {
-
-               // adapter.removeWorkmateEating();
-               // Toast.makeText(RestaurantProfileActivity.this, "no workmate want to eat", Toast.LENGTH_SHORT).show();
-            }
         });
 
         restaurantProfileActivityViewModel.fabBackground.observe(this, color -> {

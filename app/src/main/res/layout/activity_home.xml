@@ -21,12 +21,10 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/red"
+            android:elevation="4dp"
             app:title="I'm Hungry!"
             app:titleTextColor="@color/white"
-            android:fitsSystemWindows="true"
-            app:layout_collapseMode="pin"
-
-           />
+            android:fitsSystemWindows="true"/>
 
 
         <androidx.fragment.app.FragmentContainerView
@@ -54,6 +52,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
+        android:paddingTop="60dp"
         app:headerLayout="@layout/header_menu"
         app:menu="@menu/navigation_menu">
 

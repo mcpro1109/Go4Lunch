@@ -32,7 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:fitsSystemWindows="false"
+                android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
                 android:src="@drawable/workersblur"
                 app:layout_collapseMode="parallax">
@@ -47,7 +47,7 @@
                 android:theme="@style/ToolbarTheme"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/App.ToolbarStyle"
-                android:fitsSystemWindows="true"
+
                 />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>

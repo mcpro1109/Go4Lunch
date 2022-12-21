@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.go4lunch.Model.EatingWorkmate;
 import com.example.go4lunch.Model.Restaurant;
 import com.example.go4lunch.Model.Workmate;
 import com.example.go4lunch.utils.OnResult;
@@ -14,9 +15,13 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
 
 public class WorkmateRepository {
 
@@ -25,6 +30,10 @@ public class WorkmateRepository {
 
     private static final String COLLECTION_NAME = "workmates";
     private static final String EATING_COLLECTION_NAME = "workmate_restaurant";
+
+    //private Date currentDate= Calendar.getInstance().getTime();
+    DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+    private String currentDate = formatter.format(new Date());
 
     public static WorkmateRepository getInstance() {
         if (instance == null) instance = new WorkmateRepository();
@@ -49,22 +58,47 @@ public class WorkmateRepository {
                 });
     }
 
-    //filter the current user wuth the workmatelist to add the user in the restaurant
+    //filter the current user with the workmatelist to add the user in the restaurant
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     public void loadWorkmatesForRestaurant(Restaurant restaurant, OnResult<ArrayList<Workmate>> onResult) {
         firebaseFirestore
                 .collection(COLLECTION_NAME)
-                .whereEqualTo("id", user.getUid())
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
-                    //TODO FILTERS
                     ArrayList<Workmate> workmates = new ArrayList<>();
 
                     for (DocumentSnapshot d : querySnapshot.getDocuments()) {
                         workmates.add(d.toObject(Workmate.class));
                     }
-                    onResult.onSuccess(workmates);
+                    firebaseFirestore
+                            .collection(EATING_COLLECTION_NAME)
+                            .whereEqualTo("day", currentDate)
+                            .whereEqualTo("restaurant_id", restaurant.getId())
+                            .get()
+                            .addOnSuccessListener(eatingQuerySnapshot -> {
+                                //TODO FILTERS
+                                ArrayList<EatingWorkmate> eatingWorkmates = new ArrayList<>();
+
+                                for (DocumentSnapshot d : eatingQuerySnapshot.getDocuments()) {
+                                    eatingWorkmates.add(d.toObject(EatingWorkmate.class));
+                                }
+                                //filtrer si idworkmate est dans eatingworkmate
+
+                                for (EatingWorkmate w : eatingWorkmates) {
+                                    if (w.getWorkmate_id().equals(user.getUid())) {//oui
+                                        Log.e("id", w.getWorkmate_id());
+                                        Log.e("id2", user.getUid());
+
+                                         onResult.onSuccess(workmates);
+                                    }
+                                }
+                                onResult.onSuccess(workmates);
+                            })
+                            .addOnFailureListener(e -> {
+                                e.printStackTrace();
+                                onResult.onFailure();
+                            });
                 })
                 .addOnFailureListener(e -> {
                     e.printStackTrace();
@@ -77,7 +111,7 @@ public class WorkmateRepository {
 
         obj.put("workmate_id", userId);
         obj.put("restaurant_id", restaurantId);
-        obj.put("day", "13/12/2022");
+        obj.put("day", currentDate);
 
         firebaseFirestore
                 .collection(EATING_COLLECTION_NAME)
@@ -110,34 +144,4 @@ public class WorkmateRepository {
                     }
                 });
     }
-
-    /*public void createWorkmate() {
-        FirebaseUser user = getCurrentUser();
-        if (user != null) {
-            String urlPicture = (user.getPhotoUrl() != null) ? user.getPhotoUrl().toString() : null;
-            String userName = user.getDisplayName();
-            String userFirstName = "name";
-            String userId = user.getUid();
-            Log.e("nameuser", userName);//ok
-
-            Workmate workmateToCreate = new Workmate(userId, userName, userFirstName, false, workmateEating);
-
-
-
-            /*Log.e("nameuser", userData.toString());
-            //if the user exist in firestore, we get the data
-           // firebaseFirestore.collection("workmates")
-
-            userData.addOnSuccessListener(documentSnapshot -> {
-
-               if (documentSnapshot.contains(IS_EATING)) {
-                   // if (!userData.isSuccessful()) {
-                    workmateToCreate.setFirstName(userFirstName);
-                    workmateToCreate.setName(userName);
-                    documentSnapshot.get(userId);
-                }
-
-            });
-        }
-    }*/
 }
