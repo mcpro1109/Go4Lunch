@@ -41,9 +41,8 @@ public class RestaurantProfileActivityViewModel extends ViewModel {
     public LiveData<ArrayList<Workmate>> getWorkmateData() {return workmates;}
 
     public LiveData<Integer> fabBackground = Transformations.map(workmates, input -> {
-        Log.e("couleur", String.valueOf(isEating(input)));
         if(isEating(input)){
-            return R.color.blue;
+            return R.color.green;
         }
         else {
             return R.color.red;
@@ -77,10 +76,10 @@ public class RestaurantProfileActivityViewModel extends ViewModel {
             @Override
             public void onFailure() {}
         };
+
        if (isEating(workmates.getValue())){
            workmateRepository.removeEating(getCurrentUser().getUid(), onResult);
-
-       }else{
+       } else {
            workmateRepository.addEating(getCurrentUser().getUid(), restaurant.getValue().getId(), onResult);
        }
     }
@@ -88,17 +87,10 @@ public class RestaurantProfileActivityViewModel extends ViewModel {
     private boolean isEating(ArrayList<Workmate> workmates){
         boolean result = false;
         for (Workmate w: workmates){
-            Log.e("nom2", w.getId());
-           // if (getCurrentUser().getDisplayName().equals(w.getName())){
            if (getCurrentUser().getUid().equals(w.getId())){
                 result = true;
             }
-           if (!getCurrentUser().getUid().equals(w.getId())){
-               result=false;
-           }
         }
-        Log.e("nom", String.valueOf(result));//false
-        Log.e("nom1", getCurrentUser().getUid());
         return result;
     }
 

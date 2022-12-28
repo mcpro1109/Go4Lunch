@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import com.example.go4lunch.Model.EatingWorkmate;
 import com.example.go4lunch.Model.Restaurant;
 import com.example.go4lunch.Model.Workmate;
+import com.example.go4lunch.utils.FirestoreUtils;
 import com.example.go4lunch.utils.OnResult;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,7 +32,6 @@ public class WorkmateRepository {
     private static final String COLLECTION_NAME = "workmates";
     private static final String EATING_COLLECTION_NAME = "workmate_restaurant";
 
-    //private Date currentDate= Calendar.getInstance().getTime();
     DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
     private String currentDate = formatter.format(new Date());
 
@@ -40,17 +40,12 @@ public class WorkmateRepository {
         return instance;
     }
 
-    //load the data from Firestore
     public void loadWorkmates(OnResult<ArrayList<Workmate>> onResult) {
         firebaseFirestore
                 .collection(COLLECTION_NAME)
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
-                    ArrayList<Workmate> workmates = new ArrayList<>();
-                    for (DocumentSnapshot d : querySnapshot.getDocuments()) {
-                        workmates.add(d.toObject(Workmate.class));
-                    }
-                    onResult.onSuccess(workmates);
+                    onResult.onSuccess(FirestoreUtils.getList(querySnapshot, Workmate.class));
                 })
                 .addOnFailureListener(e -> {
                     e.printStackTrace();
@@ -58,42 +53,38 @@ public class WorkmateRepository {
                 });
     }
 
-    //filter the current user with the workmatelist to add the user in the restaurant
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
     public void loadWorkmatesForRestaurant(Restaurant restaurant, OnResult<ArrayList<Workmate>> onResult) {
         firebaseFirestore
                 .collection(COLLECTION_NAME)
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
-                    ArrayList<Workmate> workmates = new ArrayList<>();
+                    // List of all workmates
+                    ArrayList<Workmate> workmates = FirestoreUtils.getList(querySnapshot, Workmate.class);
 
-                    for (DocumentSnapshot d : querySnapshot.getDocuments()) {
-                        workmates.add(d.toObject(Workmate.class));
-                    }
                     firebaseFirestore
                             .collection(EATING_COLLECTION_NAME)
                             .whereEqualTo("day", currentDate)
                             .whereEqualTo("restaurant_id", restaurant.getId())
                             .get()
                             .addOnSuccessListener(eatingQuerySnapshot -> {
-                                //TODO FILTERS
-                                ArrayList<EatingWorkmate> eatingWorkmates = new ArrayList<>();
+                                // List of eating workmates
+                                ArrayList<EatingWorkmate> eatingWorkmates = FirestoreUtils.getList(eatingQuerySnapshot, EatingWorkmate.class);
 
-                                for (DocumentSnapshot d : eatingQuerySnapshot.getDocuments()) {
-                                    eatingWorkmates.add(d.toObject(EatingWorkmate.class));
-                                }
-                                //filtrer si idworkmate est dans eatingworkmate
-
+                                // list of eating workmates ids
+                                ArrayList<String> eatingWorkmatesIds = new ArrayList<>();
                                 for (EatingWorkmate w : eatingWorkmates) {
-                                    if (w.getWorkmate_id().equals(user.getUid())) {//oui
-                                        Log.e("id", w.getWorkmate_id());
-                                        Log.e("id2", user.getUid());
+                                    eatingWorkmatesIds.add(w.getWorkmate_id());
+                                }
 
-                                         onResult.onSuccess(workmates);
+                                // Construct result array with filtered workmates
+                                ArrayList<Workmate> result = new ArrayList<>();
+                                for (Workmate w : workmates) {
+                                    if (eatingWorkmatesIds.contains(w.getId())) {
+                                        result.add(w);
                                     }
                                 }
-                                onResult.onSuccess(workmates);
+
+                                onResult.onSuccess(result);
                             })
                             .addOnFailureListener(e -> {
                                 e.printStackTrace();
@@ -117,31 +108,16 @@ public class WorkmateRepository {
                 .collection(EATING_COLLECTION_NAME)
                 .document(userId)
                 .set(obj)
-                .addOnFailureListener(e -> {
-                    onResult.onFailure();
-                })
-                .addOnSuccessListener(documentSnapshot -> {
-                    onResult.onSuccess(null);
-                });
+                .addOnFailureListener(e -> onResult.onFailure())
+                .addOnSuccessListener(documentSnapshot -> onResult.onSuccess(null));
     }
 
     public void removeEating(String userId, OnResult<Void> onResult) {
-
         firebaseFirestore
                 .collection(EATING_COLLECTION_NAME)
                 .document(userId)
                 .delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.d("message", "DocumentSnapshot successfully deleted!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d("message", "Error deleting document", e);
-                    }
-                });
+                .addOnFailureListener(e -> onResult.onFailure())
+                .addOnSuccessListener(unused -> onResult.onSuccess(null));
     }
 }

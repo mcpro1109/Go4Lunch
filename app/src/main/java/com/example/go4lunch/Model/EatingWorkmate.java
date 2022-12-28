@@ -3,6 +3,7 @@ package com.example.go4lunch.Model;
 import java.io.Serializable;
 
 public class EatingWorkmate implements Serializable {
+
     String workmate_id;
     String restaurant_id;
 
@@ -10,6 +11,7 @@ public class EatingWorkmate implements Serializable {
         this.workmate_id = workmate_id;
         this.restaurant_id = restaurant_id;
     }
+
     public EatingWorkmate(){}
 
     public String getWorkmate_id() {

@@ -91,19 +91,19 @@ public class RestaurantProfileActivity extends AppCompatActivity implements Cont
 
         observeDetails();
         appBarMenuShow();
+        configureWorkmateEating();
 
         addWorkmateFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 restaurantProfileActivityViewModel.toggleEat();
-                configureWorkmateEating();
             }
         });
     }
 
     private void configureWorkmateEating() {
         restaurantProfileActivityViewModel.getWorkmateData().observe(this, workmate -> {
-                adapter.update(workmate);
+            adapter.update(workmate);
         });
 
         restaurantProfileActivityViewModel.fabBackground.observe(this, color -> {
