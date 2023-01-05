@@ -14,9 +14,14 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
 import com.example.go4lunch.HomeActivity;
+import com.example.go4lunch.Model.EatingWorkmate;
 import com.example.go4lunch.R;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 
 public class NotificationService extends FirebaseMessagingService {
@@ -35,8 +40,19 @@ public class NotificationService extends FirebaseMessagingService {
         if (remoteMessage.getNotification()!=null){
             //get message from Firebase
             RemoteMessage.Notification notification= remoteMessage.getNotification();
+
             sendVisualNotification(notification);
             Log.e("essai_notif", notification.getBody());
+        }
+    }
+
+    private void sendNotificationAtLunch(ArrayList<EatingWorkmate> eatingWorkmates, RemoteMessage remoteMessage){
+        Calendar calendar= Calendar.getInstance();
+       // calendar.add(Calendar.MINUTE, -5);
+        Date until=calendar.getTime();
+
+        for (EatingWorkmate ew: eatingWorkmates){
+            remoteMessage.getNotification().getBody();
         }
     }
 

@@ -6,6 +6,7 @@ public interface ContactRestaurant {
 
     void phoneCall();
     void websiteOpen();
+    void like();
 
     boolean onPrepareOptionMenu(Menu menu);
 }

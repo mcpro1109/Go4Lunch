@@ -1,15 +1,14 @@
 package com.example.go4lunch;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,7 +17,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -53,7 +51,7 @@ public class RestaurantProfileActivity extends AppCompatActivity implements Cont
     private AppBarLayout appBarLayout;
     private boolean appBarExpanded = true;
     private Menu collapseMenu;
-    private TextView nameWorkmate;
+    private Button likeButton;
 
     private RestaurantProfileActivityViewModel restaurantProfileActivityViewModel;
     private ProfileRestaurantRecyclerViewAdapter adapter;
@@ -70,7 +68,7 @@ public class RestaurantProfileActivity extends AppCompatActivity implements Cont
         collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
         recyclerView = findViewById(R.id.restaurantProfileRecyclerview);
         appBarLayout = findViewById(R.id.app_bar_layout);
-        nameWorkmate = findViewById(R.id.workmatesAddRestaurant);
+        likeButton = findViewById(R.id.likeButton);
 
         //back with toolbar
         setSupportActionBar(toolbarProfile);
@@ -81,26 +79,20 @@ public class RestaurantProfileActivity extends AppCompatActivity implements Cont
 
         restaurantProfileActivityViewModel = new ViewModelProvider(this).get(RestaurantProfileActivityViewModel.class);
         restaurantProfileActivityViewModel.setRestaurant((Restaurant) getIntent().getSerializableExtra("restaurant"));
-        restaurantProfileActivityViewModel.getRestaurant().observe(this, new Observer<Restaurant>() {
-            @Override
-            public void onChanged(Restaurant restaurant) {
-                updateRestaurantInformation(restaurant);
-                collapsingToolbarLayout.setTitle(restaurant.getName());
-            }
+        restaurantProfileActivityViewModel.getRestaurant().observe(this, restaurant -> {
+            updateRestaurantInformation(restaurant);
+            collapsingToolbarLayout.setTitle(restaurant.getName());
         });
 
         observeDetails();
         appBarMenuShow();
         configureWorkmateEating();
 
-        addWorkmateFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                restaurantProfileActivityViewModel.toggleEat();
-            }
-        });
+        addWorkmateFab.setOnClickListener(view -> restaurantProfileActivityViewModel.toggleEat());
+        //likeButton.setOnClickListener(view -> restaurantProfileActivityViewModel.toggleLike());
     }
 
+    @SuppressLint("ResourceAsColor")
     private void configureWorkmateEating() {
         restaurantProfileActivityViewModel.getWorkmateData().observe(this, workmate -> {
             adapter.update(workmate);
@@ -108,6 +100,11 @@ public class RestaurantProfileActivity extends AppCompatActivity implements Cont
 
         restaurantProfileActivityViewModel.fabBackground.observe(this, color -> {
             addWorkmateFab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(RestaurantProfileActivity.this, color)));
+        });
+        restaurantProfileActivityViewModel.likeBackground.observe(this, color ->{
+        //TODO
+        likeButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(RestaurantProfileActivity.this, color)));
+
         });
     }
 
@@ -159,6 +156,11 @@ public class RestaurantProfileActivity extends AppCompatActivity implements Cont
         } else {
             Toast.makeText(RestaurantProfileActivity.this, "no website", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void like() {
+        restaurantProfileActivityViewModel.toggleLike();
     }
 
     private void appBarMenuShow() {

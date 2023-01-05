@@ -64,6 +64,7 @@ public class ProfileRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<R
             headerViewHolder.buttonLike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    contactRestaurant.like();
                 }
             });
             headerViewHolder.buttonPhone.setOnClickListener(new View.OnClickListener() {

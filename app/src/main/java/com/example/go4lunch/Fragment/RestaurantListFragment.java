@@ -72,7 +72,7 @@ public class RestaurantListFragment extends Fragment {
             adapter.update(restaurants);
         });
         restaurantProfileActivityViewModel.getRestaurantData().observe(getViewLifecycleOwner(), restaurantDetails -> {
-
+            restaurantProfileActivityViewModel.toggleLike();
         });
     }
 }
