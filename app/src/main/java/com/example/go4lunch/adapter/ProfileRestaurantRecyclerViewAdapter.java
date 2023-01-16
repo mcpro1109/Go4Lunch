@@ -1,5 +1,8 @@
 package com.example.go4lunch.adapter;
 
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,10 +27,12 @@ public class ProfileRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<R
 
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
-    boolean hasPhone = false;
-    boolean isLiked = false;
-    boolean hasWebsite = false;
-    boolean isLoading = true;
+
+    private boolean hasPhone = false;
+    private boolean isLiked = false;
+    private boolean hasWebsite = false;
+    private boolean isLoading = true;
+    private int likeColor = Color.RED;
 
     private ArrayList<Workmate> workmates;
     private ContactRestaurant contactRestaurant;
@@ -41,6 +46,11 @@ public class ProfileRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<R
     public void update(ArrayList<Workmate> workmatesList) {
         this.workmates = workmatesList;
         notifyDataSetChanged();
+    }
+
+    public void updateHeader(int likeColor){
+        this.likeColor = likeColor;
+        notifyItemChanged(0);
     }
 
     @NonNull
@@ -60,38 +70,9 @@ public class ProfileRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<R
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         //show header and items in the recyclerview
         if (holder instanceof HeaderViewHolder) {
-            HeaderViewHolder headerViewHolder = (HeaderViewHolder) holder;
-            headerViewHolder.buttonLike.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    contactRestaurant.like();
-                }
-            });
-            headerViewHolder.buttonPhone.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    contactRestaurant.phoneCall();
-                }
-            });
-            headerViewHolder.buttonWeb.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    contactRestaurant.websiteOpen();
-                }
-            });
+            ((HeaderViewHolder) holder).bind();
         } else if (holder instanceof ItemViewHolder) {
-            ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
-            Workmate workmate = workmates.get(position - 1);
-
-
-            //  itemViewHolder.textWorkmate.setText("workmates eat here");
-            String name = workmate.getFirstName();
-            itemViewHolder.textWorkmate.setText(name);
-
-            Glide.with(itemViewHolder.avatarWorkmate)
-                    .load("https://ui-avatars.com/api/?name=" + workmate.getFirstName() + "&background=random")
-                    .apply(RequestOptions.circleCropTransform())
-                    .into(itemViewHolder.avatarWorkmate);
+            ((ItemViewHolder) holder).bind(workmates.get(position - 1));
         }
     }
 
@@ -120,17 +101,24 @@ public class ProfileRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<R
     private class HeaderViewHolder extends RecyclerView.ViewHolder {
 
         public ProgressBar loader;
-
         public Button buttonPhone;
         public Button buttonLike;
         public Button buttonWeb;
 
         public HeaderViewHolder(@NonNull View itemView) {
             super(itemView);
+
             loader = itemView.findViewById(R.id.progressBar);
             buttonPhone = itemView.findViewById(R.id.phoneButton);
             buttonLike = itemView.findViewById(R.id.likeButton);
             buttonWeb = itemView.findViewById(R.id.webButton);
+        }
+
+        public void bind() {
+            buttonLike.setBackgroundTintList(ColorStateList.valueOf(likeColor));
+            buttonLike.setOnClickListener(view -> contactRestaurant.like());
+            buttonPhone.setOnClickListener(view -> contactRestaurant.phoneCall());
+            buttonWeb.setOnClickListener(view -> contactRestaurant.websiteOpen());
 
             loader.setVisibility(isLoading ? View.VISIBLE : View.GONE);
 
@@ -141,6 +129,7 @@ public class ProfileRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<R
     }
 
     public class ItemViewHolder extends RecyclerView.ViewHolder {
+
         private TextView textWorkmate;
         private ImageView avatarWorkmate;
 
@@ -148,6 +137,16 @@ public class ProfileRestaurantRecyclerViewAdapter extends RecyclerView.Adapter<R
             super(itemView);
             textWorkmate = itemView.findViewById(R.id.workmatesAddRestaurant);
             avatarWorkmate = itemView.findViewById(R.id.avatarWorkmateAddRestaurant);
+        }
+
+        public void bind(Workmate workmate) {
+            String name = workmate.getFirstName();
+            textWorkmate.setText(name);
+
+            Glide.with(avatarWorkmate)
+                    .load("https://ui-avatars.com/api/?name=" + workmate.getFirstName() + "&background=random")
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(avatarWorkmate);
         }
     }
 }

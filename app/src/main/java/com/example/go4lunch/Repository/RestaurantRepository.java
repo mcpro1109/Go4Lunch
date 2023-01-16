@@ -65,22 +65,6 @@ public class RestaurantRepository {
                         onResult.onFailure();
                     }
                 });
-
-        /*firebaseFirestore
-                .collection("restaurants")
-                .get()
-                .addOnSuccessListener(querySnapshot -> {
-                    ArrayList<Restaurant> restaurants = new ArrayList<>();
-                    for (DocumentSnapshot d : querySnapshot.getDocuments()) {
-                        restaurants.add(d.toObject(Restaurant.class));
-                       // Log.d("valeur", "DocumentSnapshot data: " + d.getData());
-                    }
-                    onResult.onSuccess(restaurants);
-                })
-                .addOnFailureListener(e -> {
-                    e.printStackTrace();
-                    onResult.onFailure();
-                });*/
     }
 
     public void getDetails(String placeId, OnResult<RestaurantDetails> onResult) {

@@ -51,4 +51,5 @@ public class HomeActivityViewModel extends ViewModel {
     public FirebaseUser getCurrentUser() {
         return FirebaseAuth.getInstance().getCurrentUser();
     }
+
 }

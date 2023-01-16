@@ -1,14 +1,13 @@
 package com.example.go4lunch;
 
-import android.app.ActionBar;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -21,11 +20,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
-import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -35,17 +30,13 @@ import com.example.go4lunch.Fragment.RestaurantListFragment;
 import com.example.go4lunch.Fragment.RestaurantMapFragment;
 import com.example.go4lunch.Fragment.WorkmateFragment;
 import com.example.go4lunch.Viewmodel.HomeActivityViewModel;
-import com.example.go4lunch.Viewmodel.WorkmateViewModel;
+import com.example.go4lunch.notification.NotificationReceiver;
+import com.example.go4lunch.notification.NotificationService;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.PlaceTypes;
 import com.google.android.libraries.places.api.model.RectangularBounds;
-import com.google.android.libraries.places.api.model.TypeFilter;
-import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
@@ -55,7 +46,9 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 public class HomeActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener, NavigationView.OnNavigationItemSelectedListener {
@@ -81,9 +74,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationBarView
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         menuLeft = findViewById(R.id.drawerLayout);
         navigationView = findViewById(R.id.navigationView);
-        avatarLoginMenu =navigationView.getHeaderView(0).findViewById(R.id.avatarMenu);
+        avatarLoginMenu = navigationView.getHeaderView(0).findViewById(R.id.avatarMenu);
         nameWorkmateLog = navigationView.getHeaderView(0).findViewById(R.id.namePseudoMenu);
-        mailWorkmateLog =  navigationView.getHeaderView(0).findViewById(R.id.mailPseudoMenu);
+        mailWorkmateLog = navigationView.getHeaderView(0).findViewById(R.id.mailPseudoMenu);
 
         setSupportActionBar(toolbar);
         homeActivityViewModel = new ViewModelProvider(this).get(HomeActivityViewModel.class);
@@ -100,9 +93,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationBarView
         window.getAttributes().flags &= (~WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 // Set a color (requires API 21)
         window.setStatusBarColor(Color.parseColor("#fb5607"));
-
-
-
     }
 
 
@@ -172,10 +162,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationBarView
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, workmateFragment).commit();
                 return true;
 
-                //navigation in the navigationView
+            //navigation in the navigationView
             case R.id.yourLunchMenu:
                 break;
             case R.id.settingsMenu:
+                enabledNotification();
                 break;
             case R.id.logoutMenu:
                 logout();
@@ -185,6 +176,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationBarView
         this.menuLeft.closeDrawer(GravityCompat.START);
         return super.onOptionsItemSelected(item);
     }
+
+    private void enabledNotification() {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
 
     private void onSearchCalled() {
         List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
@@ -210,7 +207,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationBarView
         super.onPointerCaptureChanged(hasCapture);
     }
 
-   @Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search_menu, menu);
         MenuItem menuItem = menu.findItem(R.id.actionSearch);
@@ -240,12 +237,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationBarView
             if (resultCode == RESULT_OK) {
                 Place place = Autocomplete.getPlaceFromIntent(data);
 
-            }else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 Status status = Autocomplete.getStatusFromIntent(data);
-                Toast.makeText(getApplicationContext(), status.getStatusMessage(),Toast.LENGTH_SHORT).show();
-            }else if (resultCode == RESULT_CANCELED) {}
+                Toast.makeText(getApplicationContext(), status.getStatusMessage(), Toast.LENGTH_SHORT).show();
+            } else if (resultCode == RESULT_CANCELED) {
+            }
         }
     }
-
-
 }

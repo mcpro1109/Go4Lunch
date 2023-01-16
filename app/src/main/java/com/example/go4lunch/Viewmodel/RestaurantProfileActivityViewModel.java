@@ -15,6 +15,7 @@ import com.example.go4lunch.R;
 import com.example.go4lunch.Repository.LikeRepository;
 import com.example.go4lunch.Repository.RestaurantRepository;
 import com.example.go4lunch.Repository.WorkmateRepository;
+import com.example.go4lunch.utils.CombinedLiveData2;
 import com.example.go4lunch.utils.OnResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -49,10 +50,11 @@ public class RestaurantProfileActivityViewModel extends ViewModel {
 
     private MutableLiveData<ArrayList<Like>> likes = new MutableLiveData<>(new ArrayList<>());
 
-    private LiveData<Float> rating = Transformations.map(likes, input -> {
+    private CombinedLiveData2<ArrayList<Like>,ArrayList<Workmate>> combine=new CombinedLiveData2(likes, workmates);
+
+    private LiveData<Float> rating = Transformations.map(combine, input -> {
         //calcul de la note
-        @Nullable
-        Float resultRating = (float) (likes.getValue().size() / workmates.getValue().size());
+        Float resultRating = (float) (input.first.size() / input.second.size());
         return resultRating;
     });
 
@@ -146,9 +148,11 @@ public class RestaurantProfileActivityViewModel extends ViewModel {
     });
 
     private boolean isLike(ArrayList<Like> input) {
-        boolean result=true;
+        boolean result=false;
         for (Like l : input) {
-            if (l.getWorkmate_id().equals(getCurrentUser().getUid()) && l.getLike()) {
+            String workmateId=l.getWorkmate_id();
+            String currentUserId=getCurrentUser().getUid();
+            if (workmateId.equals(currentUserId) && l.getLike()) {
                 result=true;
             }
         }

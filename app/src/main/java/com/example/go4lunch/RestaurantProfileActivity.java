@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -51,7 +50,6 @@ public class RestaurantProfileActivity extends AppCompatActivity implements Cont
     private AppBarLayout appBarLayout;
     private boolean appBarExpanded = true;
     private Menu collapseMenu;
-    private Button likeButton;
 
     private RestaurantProfileActivityViewModel restaurantProfileActivityViewModel;
     private ProfileRestaurantRecyclerViewAdapter adapter;
@@ -68,7 +66,6 @@ public class RestaurantProfileActivity extends AppCompatActivity implements Cont
         collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
         recyclerView = findViewById(R.id.restaurantProfileRecyclerview);
         appBarLayout = findViewById(R.id.app_bar_layout);
-        likeButton = findViewById(R.id.likeButton);
 
         //back with toolbar
         setSupportActionBar(toolbarProfile);
@@ -89,7 +86,6 @@ public class RestaurantProfileActivity extends AppCompatActivity implements Cont
         configureWorkmateEating();
 
         addWorkmateFab.setOnClickListener(view -> restaurantProfileActivityViewModel.toggleEat());
-        //likeButton.setOnClickListener(view -> restaurantProfileActivityViewModel.toggleLike());
     }
 
     @SuppressLint("ResourceAsColor")
@@ -101,10 +97,9 @@ public class RestaurantProfileActivity extends AppCompatActivity implements Cont
         restaurantProfileActivityViewModel.fabBackground.observe(this, color -> {
             addWorkmateFab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(RestaurantProfileActivity.this, color)));
         });
-        restaurantProfileActivityViewModel.likeBackground.observe(this, color ->{
-        //TODO
-        likeButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(RestaurantProfileActivity.this, color)));
 
+        restaurantProfileActivityViewModel.likeBackground.observe(this, color -> {
+            adapter.updateHeader(ContextCompat.getColor(RestaurantProfileActivity.this, color));
         });
     }
 
