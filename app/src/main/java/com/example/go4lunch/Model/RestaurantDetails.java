@@ -17,16 +17,27 @@ public class RestaurantDetails implements Serializable {
     private String phoneNumber;
     @Nullable
     private String website;
+    private String name;
 
     public RestaurantDetails(
             String placeId,
             @Nullable CurrentOpeningHours hoursOpen,
             @Nullable String phoneNumber,
-            @Nullable String website) {
+            @Nullable String website,
+            String name) {
         this.placeId = placeId;
         this.hoursOpen = hoursOpen;
         this.phoneNumber = phoneNumber;
         this.website = website;
+        this.name=name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPlaceId() {
@@ -70,7 +81,8 @@ public class RestaurantDetails implements Serializable {
                 result.getPlaceId(),
                 result.getCurrentOpeningHours(),
                 result.getFormattedPhoneNumber(),
-                result.getWebsite()
+                result.getWebsite(),
+                result.getName()
         );
     }
 }

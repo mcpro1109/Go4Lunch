@@ -1,6 +1,7 @@
 package com.example.go4lunch.Viewmodel;
 
 import android.os.Handler;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -19,8 +20,6 @@ import com.example.go4lunch.utils.CombinedLiveData2;
 import com.example.go4lunch.utils.OnResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
@@ -50,12 +49,13 @@ public class RestaurantProfileActivityViewModel extends ViewModel {
 
     private MutableLiveData<ArrayList<Like>> likes = new MutableLiveData<>(new ArrayList<>());
 
-    private CombinedLiveData2<ArrayList<Like>,ArrayList<Workmate>> combine=new CombinedLiveData2(likes, workmates);
+    private CombinedLiveData2<ArrayList<Like>, ArrayList<Workmate>> combine = new CombinedLiveData2(likes, workmates);
 
     private LiveData<Float> rating = Transformations.map(combine, input -> {
         //calcul de la note
         Float resultRating = (float) (input.first.size() / input.second.size());
-        return resultRating;
+        Float result=resultRating.floatValue();
+        return result;
     });
 
     public LiveData<Float> getRating() {
@@ -109,7 +109,7 @@ public class RestaurantProfileActivityViewModel extends ViewModel {
         }
     }
 
-    private boolean isEating(ArrayList<Workmate> workmates) {
+    public boolean isEating(ArrayList<Workmate> workmates) {
         boolean result = false;
         for (Workmate w : workmates) {
             if (getCurrentUser().getUid().equals(w.getId())) {
@@ -143,24 +143,16 @@ public class RestaurantProfileActivityViewModel extends ViewModel {
         if (isLike(input)) {
             return R.color.green;
         } else {
-            return R.color.blue;
+            return com.google.android.libraries.places.R.color.quantum_grey;
         }
     });
 
     private boolean isLike(ArrayList<Like> input) {
-        boolean result=false;
-        for (Like l : input) {
-            String workmateId=l.getWorkmate_id();
-            String currentUserId=getCurrentUser().getUid();
-            if (workmateId.equals(currentUserId) && l.getLike()) {
-                result=true;
-            }
-        }
-        return result;
+        return !input.isEmpty();
     }
 
     public void getLikes(Restaurant restaurant) {
-        likeRepository.getLikes(restaurant, new OnResult<ArrayList<Like>>() {
+        likeRepository.getLikes(getCurrentUser().getUid(), restaurant.getId(), new OnResult<ArrayList<Like>>() {
             @Override
             public void onSuccess(ArrayList<Like> data) {
                 likes.postValue(data);
@@ -168,7 +160,6 @@ public class RestaurantProfileActivityViewModel extends ViewModel {
 
             @Override
             public void onFailure() {
-
             }
         });
     }
@@ -187,11 +178,10 @@ public class RestaurantProfileActivityViewModel extends ViewModel {
             }
         };
         if (isLike(likes.getValue())) {
-            likeRepository.addLike(getCurrentUser().getUid(), restaurant.getValue().toString(), onResult);
+            likeRepository.removeLike(getCurrentUser().getUid(),restaurant.getValue().getId(), onResult);
+
         } else {
-            likeRepository.removeLike(getCurrentUser().getUid(), onResult);
+            likeRepository.addLike(getCurrentUser().getUid(), restaurant.getValue().getId(), onResult);
         }
-
-
     }
 }

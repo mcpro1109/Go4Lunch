@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
 
     <application
         android:name=".MyApp"
@@ -66,15 +67,16 @@
             android:value="${MAPS_API_KEY}" />
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" /> <!-- Notification -->
-        <service
-            android:name=".notification.NotificationService"
+            android:value="@integer/google_play_services_version" />
+        <!-- Notification -->
+        <receiver
+            android:name=".notification.NotificationReceiver"
+            android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
-        </service>
-        <receiver android:name=".notification.NotificationReceiver" />
+        </receiver>
     </application>
 
 </manifest>

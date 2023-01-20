@@ -22,7 +22,7 @@ import com.example.go4lunch.adapter.RestaurantListFragmentRecyclerViewAdapter;
 
 import java.util.ArrayList;
 
-public class RestaurantListFragment extends Fragment {
+public class RestaurantListFragment extends Fragment{
 
     private RecyclerView recyclerView;
     HomeActivityViewModel homeActivityViewModel;
@@ -72,7 +72,7 @@ public class RestaurantListFragment extends Fragment {
             adapter.update(restaurants);
         });
         restaurantProfileActivityViewModel.getRestaurantData().observe(getViewLifecycleOwner(), restaurantDetails -> {
-            restaurantProfileActivityViewModel.toggleLike();
+            restaurantProfileActivityViewModel.getRating();
         });
     }
 }

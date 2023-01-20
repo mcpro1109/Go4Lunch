@@ -1,9 +1,9 @@
 package com.example.go4lunch.Repository;
 
 import com.example.go4lunch.Model.Like;
-import com.example.go4lunch.Model.Restaurant;
 import com.example.go4lunch.utils.FirestoreUtils;
 import com.example.go4lunch.utils.OnResult;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -21,11 +21,12 @@ public class LikeRepository {
         return instance;
     }
 
-    public void getLikes(Restaurant restaurant, OnResult<ArrayList<Like>> onResult) {
+    public void getLikes(String userId, String restaurantId, OnResult<ArrayList<Like>> onResult) {
 
         firebaseFirestore
                 .collection(COLLECTION_LIKE)
-                .whereEqualTo("restaurant_id", restaurant.getId())
+                .whereEqualTo("workmate_id", userId)
+                .whereEqualTo("restaurant_id", restaurantId)
                 .get()
                 .addOnSuccessListener(eatingQuerySnapshot -> {
 
@@ -39,33 +40,39 @@ public class LikeRepository {
                 });
     }
 
-    private float computeRating(ArrayList<Like> list) {
-        // TODO calcul
-        return 5f;
-    }
-
     public void addLike(String userId, String restaurantId, OnResult<Void> onResult) {
         Map<String, Object> obj = new HashMap<>();
 
-        Boolean choice=true;
 
-        obj.put("restaurant_id", restaurantId);
         obj.put("workmate_id", userId);
-        obj.put("like",choice);
+        obj.put("restaurant_id", restaurantId);
 
         firebaseFirestore
                 .collection(COLLECTION_LIKE)
-                .document(userId)
-                .set(obj)
+                // .document(userId)
+                .add(obj)
                 .addOnFailureListener(e -> onResult.onFailure())
                 .addOnSuccessListener(documentSnapshot -> onResult.onSuccess(null));
     }
 
-    public void removeLike(String userId, OnResult<Void> onResult){
+    public void removeLike(String userId, String restaurantId, OnResult<Void> onResult) {
+
         firebaseFirestore.collection(COLLECTION_LIKE)
-                .document(userId)
-                .delete()
-                .addOnFailureListener(e -> onResult.onFailure())
-                .addOnSuccessListener(unused -> onResult.onSuccess(null));
+                .whereEqualTo("workmate_id", userId)
+                .whereEqualTo("restaurant_id", restaurantId)
+                .get()
+                .addOnSuccessListener(eatingQuerySnapshot -> {
+                    for (DocumentSnapshot document : eatingQuerySnapshot.getDocuments()) {
+                        document.getReference().delete();
+                    }
+
+                    onResult.onSuccess(null);
+                })
+                .addOnFailureListener(e -> {
+                    e.printStackTrace();
+                    onResult.onFailure();
+                });
+
+
     }
 }

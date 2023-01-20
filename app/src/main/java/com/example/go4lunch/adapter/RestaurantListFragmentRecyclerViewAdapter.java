@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunch.Model.Restaurant;
-import com.example.go4lunch.Model.RestaurantDetails;
 import com.example.go4lunch.R;
 
 import java.util.ArrayList;
@@ -30,6 +29,7 @@ public class RestaurantListFragmentRecyclerViewAdapter extends RecyclerView.Adap
     public RestaurantListFragmentRecyclerViewAdapter(ArrayList<Restaurant> restaurantArrayList, RestaurantAdapterListener recyclerViewClickListener) {
         this.restaurantArrayList = restaurantArrayList;
         this.listener = recyclerViewClickListener;
+
     }
 
     @NonNull
@@ -60,7 +60,11 @@ public class RestaurantListFragmentRecyclerViewAdapter extends RecyclerView.Adap
         holder.numberWorkmate.setText(text2);
 
         //rating
-        holder.ratingBar.setRating((float) restaurant.getOpinion());
+        double rating= restaurant.getOpinion()*3/5;
+        holder.ratingBar.setRating((float) rating);
+
+        //eating workmates
+        //TODO
 
         //restaurant picture
         Glide

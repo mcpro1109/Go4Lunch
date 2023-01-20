@@ -13,6 +13,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.example.go4lunch.HomeActivity;
 import com.example.go4lunch.Model.EatingWorkmate;
@@ -37,7 +38,7 @@ public class NotificationService  {
         this.context = context;
     }
 
-    public void createNotification() {
+    public void createNotification(String restaurantName) {
         Intent intent = new Intent(context, HomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
@@ -49,13 +50,15 @@ public class NotificationService  {
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID);
         notificationBuilder
                 .setSmallIcon(R.drawable.ic_baseline_people_24)
-                .setContentTitle("Time to go to lunch")
+                .setContentTitle("Time to go to lunch to " + restaurantName)
                 .setContentText("you eat at ")
-                .setAutoCancel(false)
+                .setAutoCancel(true)
                 .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                 .setContentIntent(resultPendingIntent);
 
-        NotificationManager notificationManager = (NotificationManager) MyApp.app.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        NotificationManagerCompat notificationManagerCompat=NotificationManagerCompat.from(context);
+        notificationManagerCompat.notify(NOTIFICATION_ID, notificationBuilder.build());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String channelName = "Firebase messages";
@@ -65,14 +68,11 @@ public class NotificationService  {
             channel.setLightColor(Color.RED);
             channel.enableVibration(true);
             channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
-            assert notificationManager != null;
             notificationBuilder.setChannelId(NOTIFICATION_CHANNEL_ID);
-
-            notificationManager.createNotificationChannel((channel));
+            notificationManagerCompat.createNotificationChannel((channel));
         }
         //show notifications
-        assert notificationManager != null;
-        notificationManager.notify(NOTIFICATION_TAG, NOTIFICATION_ID, notificationBuilder.build());
+        notificationManagerCompat.notify(NOTIFICATION_TAG, NOTIFICATION_ID, notificationBuilder.build());
 
     }
 
