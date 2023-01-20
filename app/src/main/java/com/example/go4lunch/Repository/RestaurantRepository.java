@@ -86,7 +86,7 @@ public class RestaurantRepository {
         API.getPlacesAPI()
                 .getDetailsPlaces(
                         placeId,
-                        "place_id,formatted_phone_number,current_opening_hours,website",
+                        "name,place_id,formatted_phone_number,current_opening_hours,website",
                         BuildConfig.PLACES_API_KEY
                 )
                 .enqueue(new Callback<RestaurantResponseDetails>() {
@@ -96,6 +96,7 @@ public class RestaurantRepository {
                         if (response.isSuccessful()) {
                             ResultDetails results = response.body().getResult();
                             onResult.onSuccess(RestaurantDetails.fromGoogleResponseDetails(results));
+                           // Log.e("CALL -> ", "NAME " + results.getName());
                         } else {
                         }
                     }
@@ -113,7 +114,7 @@ public class RestaurantRepository {
         firebaseFirestore
                 .collection(EATING_COLLECTION_NAME)
                 .whereEqualTo("day", currentDate)
-                .whereEqualTo("workmate_id", FirebaseAuth.getInstance().getCurrentUser())
+                .whereEqualTo("workmate_id", FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .get()
                 .addOnSuccessListener(eatingQuerySnapshot -> {
                     // List of eating workmates
