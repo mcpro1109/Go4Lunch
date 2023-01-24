@@ -44,11 +44,11 @@ public class SettingsActivity extends AppCompatActivity {
 
             notificationSwitch.setChecked(true);
             notificationText.setText("Notification autorisée");
-            Log.d("notif", "swithc is disabled true");
+            Log.e("notif", "switch is disabled true");
         }else{
             notificationSwitch.setChecked(false);
             notificationText.setText("Notification suspendue");
-            Log.d("notif", "switch is disabled false" );
+            Log.e("notif", "switch is disabled false" );
 
             //TODO Enregister dans les sharedPreferences si on veut la notif ou non
         }

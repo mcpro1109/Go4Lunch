@@ -21,7 +21,8 @@ public class SplashActivity extends AppCompatActivity implements FirebaseAuth.Au
     private FirebaseFirestore db;
     List<AuthUI.IdpConfig> providers = Arrays.asList(
             new AuthUI.IdpConfig.GoogleBuilder().build(),
-            new AuthUI.IdpConfig.FacebookBuilder().build()
+            new AuthUI.IdpConfig.FacebookBuilder().build(),
+            new AuthUI.IdpConfig.TwitterBuilder().build()
     );
 
     @Override
