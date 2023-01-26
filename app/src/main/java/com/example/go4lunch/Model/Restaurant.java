@@ -122,6 +122,7 @@ public class Restaurant implements Serializable {
     }
 
     public String getImageURL(int width) {
+        //todo si imageref est null si oui retourné une autre image url
         return "https://maps.googleapis.com/maps/api/place/photo?maxwidth=" + width + "&photoreference=" +
                 imageReference +
                 "&key=" +
@@ -132,7 +133,7 @@ public class Restaurant implements Serializable {
         Location androidLocation = new Location("");
         androidLocation.setLatitude(result.getGeometry().getLocation().getLat());
         androidLocation.setLongitude(result.getGeometry().getLocation().getLng());
-
+//todo check if getphoto est null et si oui mettre la photo a null
         return new Restaurant(
                 result.getPlaceId(),
                 result.getName(),

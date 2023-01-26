@@ -1,14 +1,15 @@
 package com.example.go4lunch.Repository;
 
-import com.example.go4lunch.Model.Notification;
+import android.content.Context;
+import android.content.SharedPreferences;
+
+import com.example.go4lunch.MyApp;
 import com.example.go4lunch.notification.NotificationService;
-import com.example.go4lunch.utils.OnResult;
 
 public class SettingsRepository {
 
     private static SettingsRepository instance;
-    NotificationService notificationService;
-
+    SharedPreferences sharedPreferences= MyApp.app.getSharedPreferences("data", Context.MODE_PRIVATE);
 
     public static SettingsRepository getInstance() {
         if (instance == null) instance = new SettingsRepository();
@@ -16,13 +17,19 @@ public class SettingsRepository {
     }
 
 
-    public void enabledNotification(OnResult<Notification> notificationOnResult) {
-        boolean isEnabled=true;
-       if (!isEnabled){
-           notificationService.onCancel();
-           isEnabled=false;
+    public void enableNotification() {
+        SharedPreferences.Editor editor=sharedPreferences.edit();
+        editor.putBoolean("notification_enabled", true);
+        editor.apply();
+    }
 
-       }
+    public void disableNotification(){
+        SharedPreferences.Editor editor=sharedPreferences.edit();
+        editor.putBoolean("notification_enabled", false);
+        editor.apply();
+    }
 
+    public boolean isNotificationEnabled() {
+        return sharedPreferences.getBoolean("notification_enabled", true);
     }
 }
