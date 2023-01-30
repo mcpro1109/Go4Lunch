@@ -47,7 +47,6 @@
                 android:theme="@style/ToolbarTheme"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/App.ToolbarStyle"
-
                 />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>

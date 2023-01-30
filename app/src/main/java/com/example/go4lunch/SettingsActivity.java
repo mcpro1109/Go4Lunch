@@ -2,6 +2,7 @@ package com.example.go4lunch;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -24,6 +25,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private SwitchCompat notificationSwitch;
     private TextView notificationText;
+    private Toolbar settingsToolbar;
     private SettingsActivityViewModel settingsActivityViewModel;
 
     @Override
@@ -35,8 +37,14 @@ public class SettingsActivity extends AppCompatActivity {
 
         notificationSwitch=findViewById(R.id.notificationSwitch);
         notificationText=findViewById(R.id.notificationText);
+        settingsToolbar=findViewById(R.id.settingsToolbar);
 
         disabledNotification();
+
+        //back with toolbar
+        setSupportActionBar(settingsToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        settingsToolbar.setNavigationOnClickListener(view -> onBackPressed());
     }
 
     private void disabledNotification() {
@@ -51,31 +59,15 @@ public class SettingsActivity extends AppCompatActivity {
             public void onChanged(Boolean aBoolean) {
                 notificationSwitch.setChecked(aBoolean);
                 if (notificationSwitch.isChecked() ) {
-
                     notificationText.setText("Notification autorisée");
                     Log.e("notif", "switch is disabled true");
 
                 }else{
                     notificationText.setText("Notification suspendue");
                     Log.e("notif", "switch is disabled false" );
-                    //TODO Enregister dans les sharedPreferences si on veut la notif ou non
 
                 }
             }
         });
     }
-
-
-
-       /* Boolean enabledNotif=false;
-        if (enabledNotif){
-            notificationService.onCancel(this);
-            Toast.makeText(this, "notification are enabled", Toast.LENGTH_SHORT).show();
-            enabledNotif=true;
-        }else{
-            enabledNotif=false;
-        }
-
-        return enabledNotif;
-    }*/
 }

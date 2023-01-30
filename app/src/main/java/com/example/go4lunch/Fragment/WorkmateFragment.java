@@ -14,8 +14,10 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.go4lunch.Model.EatingWorkmate;
 import com.example.go4lunch.Model.Workmate;
 import com.example.go4lunch.R;
+import com.example.go4lunch.Viewmodel.RestaurantProfileActivityViewModel;
 import com.example.go4lunch.Viewmodel.WorkmateViewModel;
 import com.example.go4lunch.adapter.WorkmateFragmentRecyclerViewAdapter;
 
@@ -27,7 +29,9 @@ public class WorkmateFragment extends Fragment implements View.OnClickListener {
 
     RecyclerView recyclerView;
     ArrayList<Workmate> workmates = new ArrayList<>();
-    WorkmateFragmentRecyclerViewAdapter adapter = new WorkmateFragmentRecyclerViewAdapter(workmates);
+    ArrayList<EatingWorkmate> eatingWorkmates = new ArrayList<>();
+    WorkmateFragmentRecyclerViewAdapter adapter = new WorkmateFragmentRecyclerViewAdapter(workmates, eatingWorkmates);
+    RestaurantProfileActivityViewModel restaurantProfileActivityViewModel;
 
     public static WorkmateFragment newInstance() {
         return new WorkmateFragment();
@@ -40,7 +44,7 @@ public class WorkmateFragment extends Fragment implements View.OnClickListener {
             @Nullable Bundle savedInstanceState
     ) {
         View view = inflater.inflate(R.layout.fragment_workmate, container, false);
-
+        restaurantProfileActivityViewModel = new ViewModelProvider(this).get(RestaurantProfileActivityViewModel.class);
         recyclerView = view.findViewById(R.id.recyclerViewWorkmate);
 
         setupRecyclerView();
@@ -70,7 +74,14 @@ public class WorkmateFragment extends Fragment implements View.OnClickListener {
         workmateViewModel.getWorkmatesData().observe(getViewLifecycleOwner(), workmates -> {
             adapter.update(workmates);
         });
+        workmateViewModel.getEatingWorkmatesData().observe(getViewLifecycleOwner(), eatingWorkmates1 -> {
+                    workmateViewModel.eatingWorkmate(eatingWorkmates1, workmates);
+
+                });
+
+
     }
+
 
     @Override
     public void onClick(View view) {
